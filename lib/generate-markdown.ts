@@ -142,90 +142,42 @@ function generateProfile(state: ReadmeState): string[] {
   return lines;
 }
 
-// function generateTechStack(state: ReadmeState): string[] {
-//   if (state.techStack.length === 0) return [];
-
-//   const lines: string[] = [];
-//   lines.push("## Tech Stack");
-//   lines.push("");
-
-//   // Group by category
-//   const categories = new Map<string, typeof state.techStack>();
-//   for (const tech of state.techStack) {
-//     const existing = categories.get(tech.category) || [];
-//     existing.push(tech);
-//     categories.set(tech.category, existing);
-//   }
-
-//   // Preferred order: Frontend -> Backend -> DevOps -> Tools
-//   const preferredOrder = ["Frontend", "Backend", "DevOps", "Tools"];
-//   const sortedCategories = Array.from(categories.keys()).sort((a, b) => {
-//     const indexA = preferredOrder.indexOf(a);
-//     const indexB = preferredOrder.indexOf(b);
-
-//     // If both are in preferred order, use that order
-//     if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-//     // If only one is in preferred order, it comes first
-//     if (indexA !== -1) return -1;
-//     if (indexB !== -1) return 1;
-//     // Otherwise, alphabetical
-//     return a.localeCompare(b);
-//   });
-
-//   for (const category of sortedCategories) {
-//     const techs = categories.get(category)!;
-//     lines.push(`<p>`);
-//     lines.push(`  <b>${category}:</b> <br />`);
-//     lines.push(`  ${techs.map((t) => `<img src="${t.badge}" alt="${t.name}" title="${t.name}" width="40" height="40" vspace="5" hspace="2" />`).join(" ")}`);
-//     lines.push(`</p>`);
-//     lines.push("");
-//   }
-
-//   return lines;
-// }
-
 function generateTechStack(state: ReadmeState): string[] {
   if (state.techStack.length === 0) return [];
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+
+  const categories: Record<string, string[]> = {
+    "Frontend": [],
+    "Backend": [],
+    "DevOps": [],
+    "Tools": [],
+  };
+
+  // Populate categories - maintain methodology of generateSocials
+  state.techStack.forEach((tech) => {
+    const cat = tech.category;
+    if (!categories[cat]) {
+      categories[cat] = [];
+    }
+    categories[cat].push(
+      `<img src="${baseUrl}/api/tech-badge?name=${encodeURIComponent(tech.id || tech.name)}" alt="${tech.name}" title="${tech.name}" height="36" hspace="10" vspace="10" />`
+    );
+  });
+
+  const activeCategories = Object.entries(categories).filter(([_, icons]) => icons.length > 0);
+  if (activeCategories.length === 0) return [];
 
   const lines: string[] = [];
   lines.push("## Tech Stack");
   lines.push("");
 
-  // Group by category
-  const categories = new Map<string, typeof state.techStack>();
-  for (const tech of state.techStack) {
-    const existing = categories.get(tech.category) || [];
-    existing.push(tech);
-    categories.set(tech.category, existing);
-  }
-
-  // Preferred order: Frontend -> Backend -> DevOps -> Tools
-  const preferredOrder = ["Frontend", "Backend", "DevOps", "Tools"];
-  const sortedCategories = Array.from(categories.keys()).sort((a, b) => {
-    const indexA = preferredOrder.indexOf(a);
-    const indexB = preferredOrder.indexOf(b);
-
-    // If both are in preferred order, use that order
-    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-    // If only one is in preferred order, it comes first
-    if (indexA !== -1) return -1;
-    if (indexB !== -1) return 1;
-    // Otherwise, alphabetical
-    return a.localeCompare(b);
+  activeCategories.forEach(([name, icons]) => {
+    lines.push(`<p>`);
+    lines.push(`  <b>${name}:</b> <br />`);
+    lines.push(`  ${icons.join(" ")}`);
+    lines.push(`</p>`);
+    lines.push("");
   });
-
-  for (const category of sortedCategories) {
-    const techs = categories.get(category)!;
-    
-    // Map the images and join them with a space
-    const icons = techs.map((t) => 
-      `<img src="${t.badge}" alt="${t.name}" title="${t.name}" width="40" height="40" />`
-    ).join(" ");
-    
-    // CRITICAL FIX: Push the entire category block as a single string without line breaks
-    lines.push(`<p><b>${category}:</b><br />${icons}</p>`);
-    lines.push(""); // Keep the empty line between different categories
-  }
 
   return lines;
 }

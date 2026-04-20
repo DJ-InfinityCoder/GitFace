@@ -18,25 +18,38 @@ import {
   Eye,
   Code2,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 import { CopyGuideModal } from "./copy-guide-modal";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function PreviewPanel() {
-  const previewTheme = useReadmeStore((state) => state.previewTheme);
-  const previewMode = useReadmeStore((state) => state.previewMode);
-  const githubUsername = useReadmeStore((state) => state.githubUsername);
-  const setField = useReadmeStore((state) => state.setField);
+  const { previewTheme, previewMode, githubUsername, setField, reset } = useReadmeStore();
   
   const [copied, setCopied] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [viewMode, setViewMode] = useState<"preview" | "raw">("preview");
   const [markdown, setMarkdown] = useState("");
   const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "synced">("idle");
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
   const syncedTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const handleClearCache = useCallback(() => {
+    reset();
+  }, [reset]);
 
   // Subscribe to the whole store but only for markdown generation
   useEffect(() => {
@@ -67,7 +80,7 @@ export function PreviewPanel() {
         // Immediately show spinning state
         setSyncStatus("syncing");
         if (debounceRef.current) clearTimeout(debounceRef.current);
-        debounceRef.current = setTimeout(generate, 800);
+        debounceRef.current = setTimeout(generate, 1000);
       }
     });
 
@@ -219,7 +232,7 @@ export function PreviewPanel() {
                 ? "Preview is up to date"
                 : "Click to refresh preview"
             }
-            className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+            className={`relative flex items-center justify-center w-8 h-8 rounded transition-all duration-200 ${
               syncStatus === "syncing"
                 ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
                 : syncStatus === "synced"
@@ -243,6 +256,38 @@ export function PreviewPanel() {
               />
             )}
           </button>
+
+          {/* Clear Cache/Reset button */}
+          <button
+            id="clear-cache-btn"
+            onClick={() => setIsResetDialogOpen(true)}
+            title="Clear all progress and reset"
+            className="flex items-center justify-center w-8 h-8 rounded bg-gh-danger/10 text-gh-danger border border-gh-danger/30 hover:bg-gh-danger hover:text-white transition-all transition-colors duration-200"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Reset Confirmation Dialog */}
+          <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reset all progress?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will clear your entire configuration and reset the builder to its default state. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleClearCache}
+                  variant="destructive"
+                >
+                  Reset Everything
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           {/* Copy button */}
           <button
             id="copy-markdown-btn"
@@ -372,7 +417,14 @@ export function PreviewPanel() {
                       components={{
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         img: ({ node, ...props }: any) => {
-                          const { vAlign, vSpace, hSpace, ...validProps } = props;
+                          const { vAlign, vSpace, hSpace, src, ...validProps } = props;
+                          
+                          // Handle relative paths for local development preview
+                          // If src starts with localhost, strip it to use a relative path
+                          const cleanSrc = src?.startsWith('http://localhost:3000') 
+                            ? src.replace('http://localhost:3000', '') 
+                            : src;
+
                           const style: any = { 
                             maxWidth: "100%", 
                             display: "inline-block",
@@ -388,15 +440,14 @@ export function PreviewPanel() {
                             style.marginRight = `${hSpace}px`;
                           }
 
-                          const content = (
+                          return (
                             <img
                               {...validProps}
+                              src={cleanSrc}
                               loading="lazy"
                               style={style}
                             />
                           );
-
-                          return content;
                         },
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         a: ({ node, ...props }) => (

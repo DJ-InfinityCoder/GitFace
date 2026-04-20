@@ -151,6 +151,7 @@ export function TechStackSection() {
                         removeTech(badge.name);
                       } else {
                         addTech({
+                          id: badge.iconId || badge.name.toLowerCase(),
                           name: badge.name,
                           category: badge.category,
                           badge: badge.badgeUrl,

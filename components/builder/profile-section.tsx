@@ -63,36 +63,6 @@ export function ProfileSection() {
 
   return (
     <div className="space-y-4">
-      {/* Name */}
-      <div>
-        <label className="block text-sm font-medium text-gh-text-muted mb-1.5">
-          Display Name
-        </label>
-        <input
-          id="profile-name"
-          type="text"
-          value={name}
-          onChange={(e) => setField("name", e.target.value)}
-          placeholder="John Doe"
-          className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all"
-        />
-      </div>
-
-      {/* Tagline */}
-      <div>
-        <label className="block text-sm font-medium text-gh-text-muted mb-1.5">
-          Tagline
-        </label>
-        <input
-          id="profile-tagline"
-          type="text"
-          value={tagline}
-          onChange={(e) => setField("tagline", e.target.value)}
-          placeholder="A passionate full-stack developer from India"
-          className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all"
-        />
-      </div>
-
       {/* GitHub Username */}
       <div>
         <label className="block text-sm font-medium text-gh-text-muted mb-1.5">
@@ -150,6 +120,36 @@ export function ProfileSection() {
           )}
         </div>
       )}
+
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-medium text-gh-text-muted mb-1.5">
+          Display Name
+        </label>
+        <input
+          id="profile-name"
+          type="text"
+          value={name}
+          onChange={(e) => setField("name", e.target.value)}
+          placeholder="John Doe"
+          className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all"
+        />
+      </div>
+
+      {/* Tagline */}
+      <div>
+        <label className="block text-sm font-medium text-gh-text-muted mb-1.5">
+          Tagline
+        </label>
+        <input
+          id="profile-tagline"
+          type="text"
+          value={tagline}
+          onChange={(e) => setField("tagline", e.target.value)}
+          placeholder="A passionate full-stack developer from India"
+          className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all"
+        />
+      </div>
 
       {/* Bio */}
       <div>

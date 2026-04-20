@@ -665,6 +665,40 @@ export function generateVisitorBadgeSVG(total: number, unique: number): string {
     </svg>
   `.trim();
 }
+
+export function generateTechBadgeSVG(name: string, color: string, iconContent: string): string {
+  const label = name;
+  const labelWidth = Math.max(label.length * 8.5, 45);
+  const totalWidth = 32 + labelWidth + 10;
+
+  let processedIcon = "";
+  if (iconContent && iconContent.includes("<svg")) {
+    const viewBoxMatch = iconContent.match(/viewBox=["']([^"']*)["']/);
+    const viewBox = viewBoxMatch ? viewBoxMatch[1] : "0 0 128 128";
+    
+    const innerContent = iconContent
+      .replace(/^[\s\S]*?<svg[^>]*?>/, "")
+      .replace(/<\/svg>[\s\S]*?$/, "")
+      .trim();
+
+    processedIcon = `
+      <svg width="36" height="36" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+        <g fill="white">
+          ${innerContent}
+        </g>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        ${processedIcon || `<rect width="36" height="36" fill="${color || "#333333"}" opacity="0.1" rx="6"/>`}
+      </g>
+    </svg>
+  `.trim();
+}
+
 export const FACT_ICONS: Record<string, string[]> = {
   location: [
     "M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z",

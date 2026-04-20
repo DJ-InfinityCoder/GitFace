@@ -7,6 +7,7 @@ export interface SectionItem {
 }
 
 export interface TechStackItem {
+  id: string;
   name: string;
   category: string;
   badge: string;
@@ -108,6 +109,7 @@ export interface ReadmeActions {
   reorderSections: (activeId: string, overId: string) => void;
   addTech: (tech: TechStackItem) => void;
   removeTech: (name: string) => void;
+  reset: () => void;
   setGitHubData: (data: {
     avatarUrl: string;
     followers: number;
@@ -152,13 +154,13 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
       showStats: true,
       showStreak: true,
       showTopLangs: true,
-      showTrophies: false,
-      showHighlights: false,
-      showPulse: false,
-      showMonthlyPulse: false,
-      showYearlyPulse: false,
-      showOSS: false,
-      showActivity: false,
+      showTrophies: true,
+      showHighlights: true,
+      showPulse: true,
+      showMonthlyPulse: true,
+      showYearlyPulse: true,
+      showOSS: true,
+      showActivity: true,
       showPersona: true,
 
       twitter: "",
@@ -201,7 +203,7 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
       signal: "",
       snapchat: "",
 
-      showVisitorBadge: false,
+      showVisitorBadge: true,
       customMarkdown: "",
 
       sections: DEFAULT_SECTIONS,
@@ -235,6 +237,43 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
         set((state) => ({
           techStack: state.techStack.filter((t) => t.name !== name),
         })),
+      reset: () => {
+        localStorage.removeItem("gitface-readme-config");
+        set({
+          name: "",
+          tagline: "",
+          bio: "",
+          githubUsername: "",
+          basedIn: "",
+          portfolioUrl: "",
+          contactEmail: "",
+          workingOn: "",
+          learning: "",
+          collaboratingOn: "",
+          anythingElse: "",
+          avatarUrl: "",
+          followers: 0,
+          publicRepos: 0,
+          githubBio: "",
+          techStack: [],
+          showStats: true,
+          showStreak: true,
+          showTopLangs: true,
+          showTrophies: true,
+          showHighlights: true,
+          showPulse: true,
+          showMonthlyPulse: true,
+          showYearlyPulse: true,
+          showOSS: true,
+          showActivity: true,
+          showPersona: true,
+          showVisitorBadge: true,
+          customMarkdown: "",
+          sections: DEFAULT_SECTIONS,
+          previewTheme: "light",
+          previewMode: "desktop",
+        });
+      },
 
       setGitHubData: (data) =>
         set(() => ({
