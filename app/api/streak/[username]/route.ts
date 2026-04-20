@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchGitHubStreak } from "@/lib/github-api";
 import { generateStreakSVG, type SvgTheme } from "@/lib/github-stats-svg";
 import { getCachedSVG, TTL } from "@/lib/svg-cache";
+import "@/lib/env-init";
 
 export async function GET(
   request: NextRequest,

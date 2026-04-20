@@ -10,15 +10,26 @@ interface CacheEntry {
   expiresAt: number;
 }
 
-const cache = new Map<string, CacheEntry>();
+const globalCache = globalThis as unknown as {
+  svgCache?: Map<string, CacheEntry>;
+  svgCacheInterval?: NodeJS.Timeout;
+};
+
+if (!globalCache.svgCache) {
+  globalCache.svgCache = new Map<string, CacheEntry>();
+}
+
+const cache = globalCache.svgCache;
 
 // Lightweight periodic cleanup to avoid unbounded memory growth
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of cache.entries()) {
-    if (entry.expiresAt < now) cache.delete(key);
-  }
-}, 60_000); // Run every minute
+if (!globalCache.svgCacheInterval) {
+  globalCache.svgCacheInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of cache.entries()) {
+      if (entry.expiresAt < now) cache.delete(key);
+    }
+  }, 5*60_000); // Run every 5 minutes
+}
 
 /**
  * Get a cached SVG or generate it fresh.

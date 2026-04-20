@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchAdvancedGitHubStats } from "@/lib/github-api";
 import { generateOSSSVG, type SvgTheme } from "@/lib/github-stats-svg";
 import { getCachedSVG, TTL } from "@/lib/svg-cache";
+import "@/lib/env-init";
 
 export async function GET(
   request: NextRequest,
@@ -13,7 +14,7 @@ export async function GET(
 
   try {
     const svg = await getCachedSVG(cacheKey, TTL.LONG, async () => {
-      const data = await fetchAdvancedGitHubStats(username);
+      const data = await fetchAdvancedGitHubStats(username, { includeFullHistory: false });
       if (!data) return null;
       return generateOSSSVG(data.ossCount, theme);
     });

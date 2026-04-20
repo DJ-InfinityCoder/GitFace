@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useReadmeStore } from "@/store/readme-store";
 import { TECH_BADGES, CATEGORIES, type TechBadge } from "@/lib/tech-badges";
 import { Search, X } from "lucide-react";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export function TechStackSection() {
   const { techStack, addTech, removeTech } = useReadmeStore();
@@ -51,38 +52,9 @@ export function TechStackSection() {
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-4 pt-1 px-1 min-h-[50px]">
-            {filteredSelected.map((tech) => (
-              <div
-                key={tech.name}
-                className="relative group p-2 rounded bg-gh-muted border border-gh-border transition-all hover:border-gh-green/50"
-              >
-                <img
-                  src={tech.badge}
-                  alt={tech.name}
-                  className="w-8 h-8 object-contain"
-                />
-                <button
-                  onClick={() => removeTech(tech.name)}
-                  className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gh-danger text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all shadow-lg hover:bg-gh-danger/80"
-                  aria-label={`Remove ${tech.name}`}
-                >
-                  <X className="w-3 h-3" />
-                </button>
-                <span className="sr-only">{tech.name}</span>
-              </div>
-            ))}
-            
-            {filteredSelected.length === 0 && (
-              <p className="text-xs text-gh-text-subtle italic py-2">
-                No selected items in this category.
-              </p>
-            )}
-          </div>
-
           {/* Selected Category Filters */}
           {techStackCategories.length > 2 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="flex flex-wrap gap-1.5 pt-1 px-1">
               {techStackCategories.map((cat) => (
                 <button
                   key={cat}
@@ -98,6 +70,38 @@ export function TechStackSection() {
               ))}
             </div>
           )}
+
+          <div className="flex flex-wrap gap-4 pt-1 px-1 min-h-[50px]">
+            {filteredSelected.map((tech) => (
+              <Tooltip key={tech.name} content={tech.name}>
+                <div
+                  className="relative group p-2 rounded bg-gh-muted border border-gh-border transition-all hover:border-gh-green/50"
+                >
+                  <img
+                    src={tech.badge}
+                    alt={tech.name}
+                    className="w-8 h-8 object-contain"
+                  />
+                  <button
+                    onClick={() => removeTech(tech.name)}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gh-danger text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all shadow-lg hover:bg-gh-danger/80"
+                    aria-label={`Remove ${tech.name}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                  <span className="sr-only">{tech.name}</span>
+                </div>
+              </Tooltip>
+            ))}
+            
+            {filteredSelected.length === 0 && (
+              <p className="text-xs text-gh-text-subtle italic py-2">
+                No selected items in this category.
+              </p>
+            )}
+          </div>
+
+
         </div>
       )}
 
@@ -140,32 +144,33 @@ export function TechStackSection() {
           {filteredBadges.map((badge) => {
             const selected = isSelected(badge.name);
             return (
-              <button
-                key={badge.name}
-                onClick={() => {
-                  if (selected) {
-                    removeTech(badge.name);
-                  } else {
-                    addTech({
-                      name: badge.name,
-                      category: badge.category,
-                      badge: badge.badgeUrl,
-                    });
-                  }
-                }}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded border transition-all ${
-                  selected
-                    ? "bg-gh-green/5 border-gh-green/30 text-gh-green"
-                    : "bg-gh-bg border-gh-border text-gh-text-muted hover:border-gh-text-subtle hover:text-gh-text"
-                }`}
-              >
-                <img
-                  src={badge.badgeUrl}
-                  alt={badge.name}
-                  className="w-4 h-4 object-contain"
-                />
-                <span className="truncate text-xs font-medium">{badge.name}</span>
-              </button>
+                <Tooltip key={badge.name} content={badge.name}>
+                  <button
+                    onClick={() => {
+                      if (selected) {
+                        removeTech(badge.name);
+                      } else {
+                        addTech({
+                          name: badge.name,
+                          category: badge.category,
+                          badge: badge.badgeUrl,
+                        });
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded border transition-all w-full ${
+                      selected
+                        ? "bg-gh-green/5 border-gh-green/30 text-gh-green"
+                        : "bg-gh-bg border-gh-border text-gh-text-muted hover:border-gh-text-subtle hover:text-gh-text"
+                    }`}
+                  >
+                    <img
+                      src={badge.badgeUrl}
+                      alt={badge.name}
+                      className="w-4 h-4 object-contain"
+                    />
+                    <span className="truncate text-xs font-medium">{badge.name}</span>
+                  </button>
+                </Tooltip>
             );
           })}
         </div>

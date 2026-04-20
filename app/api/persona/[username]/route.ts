@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchDeveloperPersona } from "@/lib/github-api";
 import { generatePersonaSVG, type SvgTheme } from "@/lib/github-stats-svg";
 import { getCachedSVG, TTL } from "@/lib/svg-cache";
+import "@/lib/env-init";
 
 export async function GET(
   request: NextRequest,

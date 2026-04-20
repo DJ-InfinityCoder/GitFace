@@ -17,30 +17,81 @@ import {
   Smartphone,
   Eye,
   Code2,
+  RefreshCw,
 } from "lucide-react";
 import { CopyGuideModal } from "./copy-guide-modal";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export function PreviewPanel() {
-  const store = useReadmeStore();
-  const { previewTheme, previewMode, setField, githubUsername } = store;
+  const previewTheme = useReadmeStore((state) => state.previewTheme);
+  const previewMode = useReadmeStore((state) => state.previewMode);
+  const githubUsername = useReadmeStore((state) => state.githubUsername);
+  const setField = useReadmeStore((state) => state.setField);
+  
   const [copied, setCopied] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [viewMode, setViewMode] = useState<"preview" | "raw">("preview");
+  const [markdown, setMarkdown] = useState("");
+  const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "synced">("idle");
 
-  // Debounced markdown generation to prevent API spam on every keystroke
-  const [markdown, setMarkdown] = useState(() => generateMarkdown(store));
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const syncedTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
+  // Subscribe to the whole store but only for markdown generation
   useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setMarkdown(generateMarkdown(store));
-    }, 500);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
+    const generate = () => {
+      const state = useReadmeStore.getState();
+      const newMarkdown = generateMarkdown(state);
+      setMarkdown(newMarkdown);
+      // Show "synced" checkmark briefly, then go back to idle
+      setSyncStatus("synced");
+      if (syncedTimerRef.current) clearTimeout(syncedTimerRef.current);
+      syncedTimerRef.current = setTimeout(() => setSyncStatus("idle"), 2000);
     };
-  }, [store]);
+
+    // Initial generate
+    generate();
+
+    // Subscribe to store changes
+    const unsubscribe = useReadmeStore.subscribe((state, prevState) => {
+      // Robust check: compare all fields except ephemeral UI state
+      const ignoredKeys = ["previewMode"]; // previewTheme IS included because it affects SVG URLs
+      
+      const contentChanged = Object.keys(state).some(key => {
+        if (ignoredKeys.includes(key)) return false;
+        return (state as any)[key] !== (prevState as any)[key];
+      });
+
+      if (contentChanged) {
+        // Immediately show spinning state
+        setSyncStatus("syncing");
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(generate, 800);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (syncedTimerRef.current) clearTimeout(syncedTimerRef.current);
+    };
+  }, []);
+
+  // Force-refresh handler
+  const handleForceRefresh = useCallback(() => {
+    setSyncStatus("syncing");
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    // Small delay so the user sees the spin animation
+    setTimeout(() => {
+      const state = useReadmeStore.getState();
+      const newMarkdown = generateMarkdown(state);
+      setMarkdown(newMarkdown);
+      setSyncStatus("synced");
+      if (syncedTimerRef.current) clearTimeout(syncedTimerRef.current);
+      syncedTimerRef.current = setTimeout(() => setSyncStatus("idle"), 2000);
+    }, 300);
+  }, []);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -157,6 +208,41 @@ export function PreviewPanel() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Sync status indicator — Google Drive style */}
+          <button
+            id="sync-refresh-btn"
+            onClick={handleForceRefresh}
+            title={
+              syncStatus === "syncing"
+                ? "Syncing changes…"
+                : syncStatus === "synced"
+                ? "Preview is up to date"
+                : "Click to refresh preview"
+            }
+            className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+              syncStatus === "syncing"
+                ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                : syncStatus === "synced"
+                ? "bg-gh-green/15 text-gh-green border border-gh-green/30"
+                : "bg-gh-muted text-gh-text-muted border border-gh-border hover:text-gh-text hover:border-gh-text-muted"
+            }`}
+          >
+            {syncStatus === "synced" ? (
+              <motion.div
+                initial={{ scale: 0, rotate: -90 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Check className="w-3.5 h-3.5" />
+              </motion.div>
+            ) : (
+              <RefreshCw
+                className={`w-3.5 h-3.5 transition-transform ${
+                  syncStatus === "syncing" ? "animate-spin" : ""
+                }`}
+              />
+            )}
+          </button>
           {/* Copy button */}
           <button
             id="copy-markdown-btn"
@@ -285,13 +371,33 @@ export function PreviewPanel() {
                       rehypePlugins={[rehypeRaw]}
                       components={{
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        img: ({ node, ...props }) => (
-                          <img
-                            {...props}
-                            loading="lazy"
-                            style={{ maxWidth: "100%", display: "inline-block" }}
-                          />
-                        ),
+                        img: ({ node, ...props }: any) => {
+                          const { vAlign, vSpace, hSpace, ...validProps } = props;
+                          const style: any = { 
+                            maxWidth: "100%", 
+                            display: "inline-block",
+                            verticalAlign: vAlign || 'middle' 
+                          };
+
+                          if (vSpace) {
+                            style.marginTop = `${vSpace}px`;
+                            style.marginBottom = `${vSpace}px`;
+                          }
+                          if (hSpace) {
+                            style.marginLeft = `${hSpace}px`;
+                            style.marginRight = `${hSpace}px`;
+                          }
+
+                          const content = (
+                            <img
+                              {...validProps}
+                              loading="lazy"
+                              style={style}
+                            />
+                          );
+
+                          return content;
+                        },
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         a: ({ node, ...props }) => (
                           <a

@@ -65,8 +65,6 @@ export interface ReadmeState {
   twitch: string;
   codepen: string;
   leetcode: string;
-  behance: string;
-  dribbble: string;
   reddit: string;
   pinterest: string;
   threads: string;
@@ -75,9 +73,23 @@ export interface ReadmeState {
   kaggle: string;
   hackerrank: string;
   codewars: string;
-  steam: string;
-  playstation: string;
-  xbox: string;
+  codeforces: string;
+  geeksforgeeks: string;
+  topcoder: string;
+  codechef: string;
+  codestudio: string;
+  interviewbit: string;
+  atcoder: string;
+  exercism: string;
+  tryhackme: string;
+  substack: string;
+  ghost: string;
+  writeas: string;
+  tiktok: string;
+  telegram: string;
+  whatsapp: string;
+  signal: string;
+  snapchat: string;
 
   // Extras
   showVisitorBadge: boolean;
@@ -163,8 +175,6 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
       twitch: "",
       codepen: "",
       leetcode: "",
-      behance: "",
-      dribbble: "",
       reddit: "",
       pinterest: "",
       threads: "",
@@ -173,9 +183,23 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
       kaggle: "",
       hackerrank: "",
       codewars: "",
-      steam: "",
-      playstation: "",
-      xbox: "",
+      codeforces: "",
+      geeksforgeeks: "",
+      topcoder: "",
+      codechef: "",
+      codestudio: "",
+      interviewbit: "",
+      atcoder: "",
+      exercism: "",
+      tryhackme: "",
+      substack: "",
+      ghost: "",
+      writeas: "",
+      tiktok: "",
+      telegram: "",
+      whatsapp: "",
+      signal: "",
+      snapchat: "",
 
       showVisitorBadge: false,
       customMarkdown: "",

@@ -5,18 +5,28 @@ import {
   AtSign, Link2, Globe, Video, MessageCircle, 
   Camera, Square, Tv, Code, 
   HelpCircle, BookOpen, PenTool, Pencil, Code2, Palette, Send,
-  Orbit, Cloud, MessageSquare, Pin, BarChart, Terminal, Sword, Gamepad, Gamepad2
+  Orbit, Cloud, MessageSquare, Pin, BarChart, Terminal, Sword, Gamepad, Gamepad2,
+  Monitor,
+  CheckSquare,
+  Hash,
+  Dumbbell,
+  Shield,
+  Newspaper,
+  Ghost,
+  Type,
+  Music,
+  Trophy
 } from "lucide-react";
 
 const SOCIAL_FIELDS = [
-  // Professional & Branding
+  // Professional Presence
   {
     key: "twitter" as const,
     label: "Twitter / X",
     icon: Send,
     placeholder: "username",
     prefix: "@",
-    category: "Professional & Branding",
+    category: "Professional Presence",
   },
   {
     key: "linkedin" as const,
@@ -24,7 +34,7 @@ const SOCIAL_FIELDS = [
     icon: Link2,
     placeholder: "in/username",
     prefix: "",
-    category: "Professional & Branding",
+    category: "Professional Presence",
   },
   {
     key: "portfolio" as const,
@@ -32,17 +42,17 @@ const SOCIAL_FIELDS = [
     icon: Globe,
     placeholder: "https://your-site.com",
     prefix: "",
-    category: "Professional & Branding",
+    category: "Professional Presence",
   },
   
-  // Developer Profiles
+  // Coding & Challenges
   {
     key: "stackoverflow" as const,
     label: "Stack Overflow",
     icon: HelpCircle,
     placeholder: "user-id",
     prefix: "",
-    category: "Development",
+    category: "Coding & Challenges",
   },
   {
     key: "leetcode" as const,
@@ -50,49 +60,7 @@ const SOCIAL_FIELDS = [
     icon: Code2,
     placeholder: "username",
     prefix: "",
-    category: "Development",
-  },
-  {
-    key: "codepen" as const,
-    label: "CodePen",
-    icon: Code,
-    placeholder: "username",
-    prefix: "",
-    category: "Development",
-  },
-  {
-    key: "devto" as const,
-    label: "Dev.to",
-    icon: BookOpen,
-    placeholder: "username",
-    prefix: "",
-    category: "Development",
-  },
-  {
-    key: "hashnode" as const,
-    label: "Hashnode",
-    icon: Pencil,
-    placeholder: "username",
-    prefix: "@",
-    category: "Development",
-  },
-  {
-    key: "medium" as const,
-    label: "Medium",
-    icon: PenTool,
-    placeholder: "@username",
-    prefix: "",
-    category: "Development",
-  },
-
-  // Research & Competitive
-  {
-    key: "kaggle" as const,
-    label: "Kaggle",
-    icon: BarChart,
-    placeholder: "username",
-    prefix: "",
-    category: "Research & Competitive",
+    category: "Coding & Challenges",
   },
   {
     key: "hackerrank" as const,
@@ -100,7 +68,7 @@ const SOCIAL_FIELDS = [
     icon: Terminal,
     placeholder: "username",
     prefix: "",
-    category: "Research & Competitive",
+    category: "Coding & Challenges",
   },
   {
     key: "codewars" as const,
@@ -108,17 +76,155 @@ const SOCIAL_FIELDS = [
     icon: Sword,
     placeholder: "username",
     prefix: "",
-    category: "Research & Competitive",
+    category: "Coding & Challenges",
   },
-  
-  // Content & Community
+  {
+    key: "kaggle" as const,
+    label: "Kaggle",
+    icon: BarChart,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "codeforces" as const,
+    label: "Codeforces",
+    icon: Code,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "geeksforgeeks" as const,
+    label: "GeeksforGeeks",
+    icon: BookOpen,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "topcoder" as const,
+    label: "TopCoder",
+    icon: Trophy,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "codechef" as const,
+    label: "CodeChef",
+    icon: Code2,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "codestudio" as const,
+    label: "CodeStudio",
+    icon: Monitor,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "interviewbit" as const,
+    label: "InterviewBit",
+    icon: CheckSquare,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "atcoder" as const,
+    label: "AtCoder",
+    icon: Hash,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "exercism" as const,
+    label: "Exercism",
+    icon: Dumbbell,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "tryhackme" as const,
+    label: "TryHackMe",
+    icon: Shield,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+  {
+    key: "codepen" as const,
+    label: "CodePen",
+    icon: Code,
+    placeholder: "username",
+    prefix: "",
+    category: "Coding & Challenges",
+  },
+
+  // Technical Writing
+  {
+    key: "devto" as const,
+    label: "Dev.to",
+    icon: BookOpen,
+    placeholder: "username",
+    prefix: "",
+    category: "Technical Writing",
+  },
+  {
+    key: "hashnode" as const,
+    label: "Hashnode",
+    icon: Pencil,
+    placeholder: "username",
+    prefix: "@",
+    category: "Technical Writing",
+  },
+  {
+    key: "medium" as const,
+    label: "Medium",
+    icon: PenTool,
+    placeholder: "@username",
+    prefix: "",
+    category: "Technical Writing",
+  },
+  {
+    key: "substack" as const,
+    label: "Substack",
+    icon: Newspaper,
+    placeholder: "username",
+    prefix: "",
+    category: "Technical Writing",
+  },
+  {
+    key: "ghost" as const,
+    label: "Ghost",
+    icon: Ghost,
+    placeholder: "https://your-blog.com",
+    prefix: "",
+    category: "Technical Writing",
+  },
+  {
+    key: "writeas" as const,
+    label: "Write.as",
+    icon: Type,
+    placeholder: "username",
+    prefix: "",
+    category: "Technical Writing",
+  },
+
+  // Social Media
   {
     key: "youtube" as const,
     label: "YouTube",
     icon: Video,
     placeholder: "channel-name",
     prefix: "@",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "discord" as const,
@@ -126,7 +232,7 @@ const SOCIAL_FIELDS = [
     icon: MessageCircle,
     placeholder: "server-invite-code",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "reddit" as const,
@@ -134,7 +240,7 @@ const SOCIAL_FIELDS = [
     icon: MessageSquare,
     placeholder: "username",
     prefix: "u/",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "threads" as const,
@@ -142,7 +248,7 @@ const SOCIAL_FIELDS = [
     icon: Orbit,
     placeholder: "username",
     prefix: "@",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "bluesky" as const,
@@ -150,7 +256,7 @@ const SOCIAL_FIELDS = [
     icon: Cloud,
     placeholder: "username.bsky.social",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "mastodon" as const,
@@ -158,7 +264,7 @@ const SOCIAL_FIELDS = [
     icon: AtSign,
     placeholder: "https://mastodon.social/@user",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "instagram" as const,
@@ -166,7 +272,7 @@ const SOCIAL_FIELDS = [
     icon: Camera,
     placeholder: "username",
     prefix: "@",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "facebook" as const,
@@ -174,7 +280,7 @@ const SOCIAL_FIELDS = [
     icon: Square,
     placeholder: "username",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "pinterest" as const,
@@ -182,7 +288,7 @@ const SOCIAL_FIELDS = [
     icon: Pin,
     placeholder: "username",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
   },
   {
     key: "twitch" as const,
@@ -190,52 +296,49 @@ const SOCIAL_FIELDS = [
     icon: Tv,
     placeholder: "username",
     prefix: "",
-    category: "Community & Content",
+    category: "Social Media",
+  },
+  {
+    key: "tiktok" as const,
+    label: "TikTok",
+    icon: Music,
+    placeholder: "username",
+    prefix: "@",
+    category: "Social Media",
+  },
+  {
+    key: "telegram" as const,
+    label: "Telegram",
+    icon: Send,
+    placeholder: "username",
+    prefix: "",
+    category: "Social Media",
+  },
+  {
+    key: "whatsapp" as const,
+    label: "WhatsApp",
+    icon: MessageCircle,
+    placeholder: "phone-number",
+    prefix: "+",
+    category: "Social Media",
+  },
+  {
+    key: "signal" as const,
+    label: "Signal",
+    icon: MessageSquare,
+    placeholder: "phone-number",
+    prefix: "",
+    category: "Social Media",
+  },
+  {
+    key: "snapchat" as const,
+    label: "Snapchat",
+    icon: Ghost,
+    placeholder: "username",
+    prefix: "",
+    category: "Social Media",
   },
 
-  // Gaming
-  {
-    key: "steam" as const,
-    label: "Steam",
-    icon: Gamepad2,
-    placeholder: "username",
-    prefix: "",
-    category: "Gaming",
-  },
-  {
-    key: "playstation" as const,
-    label: "PlayStation",
-    icon: Gamepad,
-    placeholder: "psn_id",
-    prefix: "",
-    category: "Gaming",
-  },
-  {
-    key: "xbox" as const,
-    label: "Xbox",
-    icon: Gamepad,
-    placeholder: "gamertag",
-    prefix: "",
-    category: "Gaming",
-  },
-  
-  // Design & Creative
-  {
-    key: "behance" as const,
-    label: "Behance",
-    icon: Palette,
-    placeholder: "username",
-    prefix: "",
-    category: "Creative",
-  },
-  {
-    key: "dribbble" as const,
-    label: "Dribbble",
-    icon: Globe,
-    placeholder: "username",
-    prefix: "",
-    category: "Creative",
-  },
 ];
 
 export function SocialsSection() {

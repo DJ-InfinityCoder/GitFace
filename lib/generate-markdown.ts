@@ -54,12 +54,12 @@ function generateProfile(state: ReadmeState): string[] {
     lines.push("");
   }
 
-  // Monochrome icon list for facts (black/white/gray SVG icons inline)
-  const factItems: { icon: string; text: string; link?: string }[] = [];
+  const factItems: { type: string; label: string; text: string; link?: string }[] = [];
 
   if (state.basedIn) {
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3" fill="#ccc" stroke="#333"/></svg>`,
+      type: "location",
+      label: "Location",
       text: state.basedIn,
     });
   }
@@ -67,7 +67,8 @@ function generateProfile(state: ReadmeState): string[] {
   if (state.portfolioUrl) {
     const displayUrl = state.portfolioUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" fill="#eee" stroke="#333"/></svg>`,
+      type: "portfolio",
+      label: "Portfolio",
       text: displayUrl,
       link: state.portfolioUrl,
     });
@@ -75,7 +76,8 @@ function generateProfile(state: ReadmeState): string[] {
 
   if (state.contactEmail) {
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" fill="#eee" stroke="#333"/><path d="m22 6-10 7L2 6" stroke="#555"/></svg>`,
+      type: "mail",
+      label: "Email",
       text: state.contactEmail,
       link: `mailto:${state.contactEmail}`,
     });
@@ -83,35 +85,43 @@ function generateProfile(state: ReadmeState): string[] {
 
   if (state.workingOn) {
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2" fill="#eee" stroke="#333"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" stroke="#555"/></svg>`,
-      text: `Working on **${state.workingOn}**`,
+      type: "working",
+      label: "Working on",
+      text: `<b>${state.workingOn}</b>`,
     });
   }
 
   if (state.learning) {
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" fill="#eee" stroke="#333"/></svg>`,
-      text: `Learning **${state.learning}**`,
+      type: "learning",
+      label: "Learning",
+      text: `<b>${state.learning}</b>`,
     });
   }
 
   if (state.collaboratingOn) {
     factItems.push({
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4" fill="#ccc" stroke="#333"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="#888"/></svg>`,
-      text: `Collaborating on **${state.collaboratingOn}**`,
+      type: "collab",
+      label: "Collaborating on",
+      text: `<b>${state.collaboratingOn}</b>`,
     });
   }
 
   if (factItems.length > 0) {
-    // Left-aligned bulleted list layout to avoid ugly table borders
+    lines.push(`<div align="center">`);
+    lines.push(`  <table>`);
     for (const item of factItems) {
       const textContent = item.link
         ? `<a href="${item.link}">${item.text}</a>`
         : item.text;
-      // Wrap SVG in a single line to avoid breaking the markdown list rendering
-      const inlineIcon = item.icon.replace(/\n\s*/g, " ");
-      lines.push(`- ${inlineIcon} ${textContent}`);
+      
+      lines.push(`    <tr>`);
+      lines.push(`      <td align="left" width="30%"><img src="${baseUrl}/api/fact-icon?type=${item.type}" width="18" height="18" alt="${item.type}" valign="middle" /> &nbsp; <b>${item.label}</b></td>`);
+      lines.push(`      <td align="left">${textContent}</td>`);
+      lines.push(`    </tr>`);
     }
+    lines.push(`  </table>`);
+    lines.push(`</div>`);
     lines.push("");
   }
 
@@ -131,6 +141,48 @@ function generateProfile(state: ReadmeState): string[] {
 
   return lines;
 }
+
+// function generateTechStack(state: ReadmeState): string[] {
+//   if (state.techStack.length === 0) return [];
+
+//   const lines: string[] = [];
+//   lines.push("## Tech Stack");
+//   lines.push("");
+
+//   // Group by category
+//   const categories = new Map<string, typeof state.techStack>();
+//   for (const tech of state.techStack) {
+//     const existing = categories.get(tech.category) || [];
+//     existing.push(tech);
+//     categories.set(tech.category, existing);
+//   }
+
+//   // Preferred order: Frontend -> Backend -> DevOps -> Tools
+//   const preferredOrder = ["Frontend", "Backend", "DevOps", "Tools"];
+//   const sortedCategories = Array.from(categories.keys()).sort((a, b) => {
+//     const indexA = preferredOrder.indexOf(a);
+//     const indexB = preferredOrder.indexOf(b);
+
+//     // If both are in preferred order, use that order
+//     if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+//     // If only one is in preferred order, it comes first
+//     if (indexA !== -1) return -1;
+//     if (indexB !== -1) return 1;
+//     // Otherwise, alphabetical
+//     return a.localeCompare(b);
+//   });
+
+//   for (const category of sortedCategories) {
+//     const techs = categories.get(category)!;
+//     lines.push(`<p>`);
+//     lines.push(`  <b>${category}:</b> <br />`);
+//     lines.push(`  ${techs.map((t) => `<img src="${t.badge}" alt="${t.name}" title="${t.name}" width="40" height="40" vspace="5" hspace="2" />`).join(" ")}`);
+//     lines.push(`</p>`);
+//     lines.push("");
+//   }
+
+//   return lines;
+// }
 
 function generateTechStack(state: ReadmeState): string[] {
   if (state.techStack.length === 0) return [];
@@ -164,12 +216,15 @@ function generateTechStack(state: ReadmeState): string[] {
 
   for (const category of sortedCategories) {
     const techs = categories.get(category)!;
-    lines.push(`**${category}:**`);
-    lines.push("");
-    lines.push(
-      `<p>\n${techs.map((t) => `  <img src="${t.badge}" alt="${t.name}" width="40" height="40" />`).join("\n")}\n</p>`
-    );
-    lines.push("");
+    
+    // Map the images and join them with a space
+    const icons = techs.map((t) => 
+      `<img src="${t.badge}" alt="${t.name}" title="${t.name}" width="40" height="40" />`
+    ).join(" ");
+    
+    // CRITICAL FIX: Push the entire category block as a single string without line breaks
+    lines.push(`<p><b>${category}:</b><br />${icons}</p>`);
+    lines.push(""); // Keep the empty line between different categories
   }
 
   return lines;
@@ -246,56 +301,63 @@ function generateGitHubStats(state: ReadmeState): string[] {
 function generateSocials(state: ReadmeState): string[] {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
   const categories: Record<string, string[]> = {
-    "Professional & Branding": [],
-    "Development": [],
-    "Research & Competitive": [],
-    "Community & Content": [],
-    "Gaming": [],
-    "Creative": [],
+    "Professional Presence": [],
+    "Coding & Challenges": [],
+    "Technical Writing": [],
+    "Social Media": [],
   };
 
   const addBadge = (cat: keyof typeof categories, platform: string, value: string, link: string) => {
-    categories[cat].push(`<a href="${link}" target="_blank"><img src="${baseUrl}/api/social-badge?platform=${platform}&value=${encodeURIComponent(value)}" alt="${platform}" /></a>`);
+    categories[cat].push(`<a href="${link}" target="_blank"><img src="${baseUrl}/api/social-badge?platform=${platform}&value=${encodeURIComponent(value)}" alt="${platform}" vspace="5" hspace="2" /></a>`);
   };
 
-  // 1. Professional
-  if (state.twitter) addBadge("Professional & Branding", "Twitter", state.twitter, state.twitter.startsWith("http") ? state.twitter : `https://x.com/${state.twitter}`);
-  if (state.linkedin) addBadge("Professional & Branding", "LinkedIn", state.linkedin, state.linkedin.startsWith("http") ? state.linkedin : `https://linkedin.com/in/${state.linkedin}`);
-  if (state.portfolio) addBadge("Professional & Branding", "Portfolio", state.portfolio, state.portfolio.startsWith("http") ? state.portfolio : `https://${state.portfolio}`);
+  // 1. Professional Presence
+  if (state.twitter) addBadge("Professional Presence", "Twitter", state.twitter, state.twitter.startsWith("http") ? state.twitter : `https://x.com/${state.twitter}`);
+  if (state.linkedin) addBadge("Professional Presence", "LinkedIn", state.linkedin, state.linkedin.startsWith("http") ? state.linkedin : `https://linkedin.com/in/${state.linkedin}`);
+  if (state.portfolio) addBadge("Professional Presence", "Portfolio", state.portfolio, state.portfolio.startsWith("http") ? state.portfolio : `https://${state.portfolio.replace(/^https?:\/\//, "")}`);
 
-  // 2. Development
-  if (state.stackoverflow) addBadge("Development", "StackOverflow", state.stackoverflow, state.stackoverflow.startsWith("http") ? state.stackoverflow : `https://stackoverflow.com/users/${state.stackoverflow}`);
-  if (state.devto) addBadge("Development", "DevTo", state.devto, state.devto.startsWith("http") ? state.devto : `https://dev.to/${state.devto}`);
-  if (state.medium) addBadge("Development", "Medium", state.medium, state.medium.startsWith("http") ? state.medium : `https://medium.com/${state.medium.startsWith("@") ? "" : "@"}${state.medium}`);
-  if (state.hashnode) addBadge("Development", "Hashnode", state.hashnode, state.hashnode.startsWith("http") ? state.hashnode : `https://hashnode.com/@${state.hashnode}`);
-  if (state.leetcode) addBadge("Development", "LeetCode", state.leetcode, state.leetcode.startsWith("http") ? state.leetcode : `https://leetcode.com/${state.leetcode}`);
-  if (state.codepen) addBadge("Development", "CodePen", state.codepen, state.codepen.startsWith("http") ? state.codepen : `https://codepen.io/${state.codepen}`);
+  // 2. Coding & Challenges
+  if (state.stackoverflow) addBadge("Coding & Challenges", "StackOverflow", state.stackoverflow, state.stackoverflow.startsWith("http") ? state.stackoverflow : `https://stackoverflow.com/users/${state.stackoverflow}`);
+  if (state.leetcode) addBadge("Coding & Challenges", "LeetCode", state.leetcode, state.leetcode.startsWith("http") ? state.leetcode : `https://leetcode.com/${state.leetcode}`);
+  if (state.hackerrank) addBadge("Coding & Challenges", "HackerRank", state.hackerrank, state.hackerrank.startsWith("http") ? state.hackerrank : `https://hackerrank.com/${state.hackerrank}`);
+  if (state.codewars) addBadge("Coding & Challenges", "CodeWars", state.codewars, state.codewars.startsWith("http") ? state.codewars : `https://codewars.com/users/${state.codewars}`);
+  if (state.kaggle) addBadge("Coding & Challenges", "Kaggle", state.kaggle, state.kaggle.startsWith("http") ? state.kaggle : `https://kaggle.com/${state.kaggle}`);
+  if (state.codeforces) addBadge("Coding & Challenges", "Codeforces", state.codeforces, state.codeforces.startsWith("http") ? state.codeforces : `https://codeforces.com/profile/${state.codeforces}`);
+  if (state.geeksforgeeks) addBadge("Coding & Challenges", "GeeksforGeeks", state.geeksforgeeks, state.geeksforgeeks.startsWith("http") ? state.geeksforgeeks : `https://geeksforgeeks.org/user/${state.geeksforgeeks}`);
+  if (state.topcoder) addBadge("Coding & Challenges", "TopCoder", state.topcoder, state.topcoder.startsWith("http") ? state.topcoder : `https://topcoder.com/members/${state.topcoder}`);
+  if (state.codechef) addBadge("Coding & Challenges", "CodeChef", state.codechef, state.codechef.startsWith("http") ? state.codechef : `https://codechef.com/users/${state.codechef}`);
+  if (state.codestudio) addBadge("Coding & Challenges", "CodeStudio", state.codestudio, state.codestudio.startsWith("http") ? state.codestudio : `https://codingninjas.com/studio/profile/${state.codestudio}`);
+  if (state.interviewbit) addBadge("Coding & Challenges", "InterviewBit", state.interviewbit, state.interviewbit.startsWith("http") ? state.interviewbit : `https://interviewbit.com/profile/${state.interviewbit}`);
+  if (state.atcoder) addBadge("Coding & Challenges", "AtCoder", state.atcoder, state.atcoder.startsWith("http") ? state.atcoder : `https://atcoder.jp/users/${state.atcoder}`);
+  if (state.exercism) addBadge("Coding & Challenges", "Exercism", state.exercism, state.exercism.startsWith("http") ? state.exercism : `https://exercism.org/profiles/${state.exercism}`);
+  if (state.tryhackme) addBadge("Coding & Challenges", "TryHackMe", state.tryhackme, state.tryhackme.startsWith("http") ? state.tryhackme : `https://tryhackme.com/p/${state.tryhackme}`);
+  if (state.codepen) addBadge("Coding & Challenges", "CodePen", state.codepen, state.codepen.startsWith("http") ? state.codepen : `https://codepen.io/${state.codepen}`);
 
-  // 3. Research/Competitive
-  if (state.kaggle) addBadge("Research & Competitive", "Kaggle", state.kaggle, state.kaggle.startsWith("http") ? state.kaggle : `https://kaggle.com/${state.kaggle}`);
-  if (state.hackerrank) addBadge("Research & Competitive", "HackerRank", state.hackerrank, state.hackerrank.startsWith("http") ? state.hackerrank : `https://hackerrank.com/${state.hackerrank}`);
-  if (state.codewars) addBadge("Research & Competitive", "CodeWars", state.codewars, state.codewars.startsWith("http") ? state.codewars : `https://codewars.com/users/${state.codewars}`);
+  // 3. Technical Writing
+  if (state.devto) addBadge("Technical Writing", "DevTo", state.devto, state.devto.startsWith("http") ? state.devto : `https://dev.to/${state.devto}`);
+  if (state.hashnode) addBadge("Technical Writing", "Hashnode", state.hashnode, state.hashnode.startsWith("http") ? state.hashnode : `https://hashnode.com/@${state.hashnode}`);
+  if (state.medium) addBadge("Technical Writing", "Medium", state.medium, state.medium.startsWith("http") ? state.medium : `https://medium.com/${state.medium.startsWith("@") ? "" : "@"}${state.medium}`);
+  if (state.substack) addBadge("Technical Writing", "Substack", state.substack, state.substack.startsWith("http") ? state.substack : `https://${state.substack}.substack.com`);
+  if (state.ghost) addBadge("Technical Writing", "Ghost", state.ghost, state.ghost.startsWith("http") ? state.ghost : state.ghost);
+  if (state.writeas) addBadge("Technical Writing", "WriteAs", state.writeas, state.writeas.startsWith("http") ? state.writeas : `https://write.as/${state.writeas}`);
 
-  // 4. Community
-  if (state.youtube) addBadge("Community & Content", "YouTube", state.youtube, state.youtube.startsWith("http") ? state.youtube : `https://youtube.com/@${state.youtube}`);
-  if (state.discord) addBadge("Community & Content", "Discord", state.discord, state.discord.startsWith("http") ? state.discord : `https://discord.gg/${state.discord}`);
-  if (state.twitch) addBadge("Community & Content", "Twitch", state.twitch, state.twitch.startsWith("http") ? state.twitch : `https://twitch.tv/${state.twitch}`);
-  if (state.instagram) addBadge("Community & Content", "Instagram", state.instagram, state.instagram.startsWith("http") ? state.instagram : `https://instagram.com/${state.instagram}`);
-  if (state.facebook) addBadge("Community & Content", "Facebook", state.facebook, state.facebook.startsWith("http") ? state.facebook : `https://facebook.com/${state.facebook}`);
-  if (state.reddit) addBadge("Community & Content", "Reddit", state.reddit, state.reddit.startsWith("http") ? state.reddit : `https://reddit.com/user/${state.reddit}`);
-  if (state.pinterest) addBadge("Community & Content", "Pinterest", state.pinterest, state.pinterest.startsWith("http") ? state.pinterest : `https://pinterest.com/${state.pinterest}`);
-  if (state.threads) addBadge("Community & Content", "Threads", state.threads, state.threads.startsWith("http") ? state.threads : `https://threads.net/@${state.threads}`);
-  if (state.bluesky) addBadge("Community & Content", "BlueSky", state.bluesky, state.bluesky.startsWith("http") ? state.bluesky : `https://bsky.app/profile/${state.bluesky}`);
-  if (state.mastodon) addBadge("Community & Content", "Mastodon", state.mastodon, state.mastodon.startsWith("http") ? state.mastodon : state.mastodon);
+  // 4. Social Media
+  if (state.youtube) addBadge("Social Media", "YouTube", state.youtube, state.youtube.startsWith("http") ? state.youtube : `https://youtube.com/@${state.youtube}`);
+  if (state.discord) addBadge("Social Media", "Discord", state.discord, state.discord.startsWith("http") ? state.discord : `https://discord.gg/${state.discord}`);
+  if (state.twitch) addBadge("Social Media", "Twitch", state.twitch, state.twitch.startsWith("http") ? state.twitch : `https://twitch.tv/${state.twitch}`);
+  if (state.instagram) addBadge("Social Media", "Instagram", state.instagram, state.instagram.startsWith("http") ? state.instagram : `https://instagram.com/${state.instagram}`);
+  if (state.facebook) addBadge("Social Media", "Facebook", state.facebook, state.facebook.startsWith("http") ? state.facebook : `https://facebook.com/${state.facebook}`);
+  if (state.reddit) addBadge("Social Media", "Reddit", state.reddit, state.reddit.startsWith("http") ? state.reddit : `https://reddit.com/user/${state.reddit}`);
+  if (state.pinterest) addBadge("Social Media", "Pinterest", state.pinterest, state.pinterest.startsWith("http") ? state.pinterest : `https://pinterest.com/${state.pinterest}`);
+  if (state.threads) addBadge("Social Media", "Threads", state.threads, state.threads.startsWith("http") ? state.threads : `https://threads.net/@${state.threads}`);
+  if (state.bluesky) addBadge("Social Media", "BlueSky", state.bluesky, state.bluesky.startsWith("http") ? state.bluesky : `https://bsky.app/profile/${state.bluesky}`);
+  if (state.mastodon) addBadge("Social Media", "Mastodon", state.mastodon, state.mastodon.startsWith("http") ? state.mastodon : state.mastodon);
+  if (state.tiktok) addBadge("Social Media", "TikTok", state.tiktok, state.tiktok.startsWith("http") ? state.tiktok : `https://tiktok.com/@${state.tiktok}`);
+  if (state.telegram) addBadge("Social Media", "Telegram", state.telegram, state.telegram.startsWith("http") ? state.telegram : `https://t.me/${state.telegram}`);
+  if (state.whatsapp) addBadge("Social Media", "WhatsApp", state.whatsapp, state.whatsapp.startsWith("http") ? state.whatsapp : `https://wa.me/${state.whatsapp}`);
+  if (state.signal) addBadge("Social Media", "Signal", state.signal, state.signal.startsWith("http") ? state.signal : `https://signal.me/#p/${state.signal}`);
+  if (state.snapchat) addBadge("Social Media", "Snapchat", state.snapchat, state.snapchat.startsWith("http") ? state.snapchat : `https://snapchat.com/add/${state.snapchat}`);
 
-  // 5. Gaming
-  if (state.steam) addBadge("Gaming", "Steam", state.steam, state.steam.startsWith("http") ? state.steam : `https://steamcommunity.com/id/${state.steam}`);
-  if (state.playstation) addBadge("Gaming", "PlayStation", state.playstation, `https://psnprofiles.com/${state.playstation}`);
-  if (state.xbox) addBadge("Gaming", "Xbox", state.xbox, `https://xboxgamertag.com/search/${state.xbox}`);
-
-  // 6. Creative
-  if (state.behance) addBadge("Creative", "Behance", state.behance, state.behance.startsWith("http") ? state.behance : `https://behance.net/${state.behance}`);
-  if (state.dribbble) addBadge("Creative", "Dribbble", state.dribbble, state.dribbble.startsWith("http") ? state.dribbble : `https://dribbble.com/${state.dribbble}`);
 
   const activeCategories = Object.entries(categories).filter(([_, badges]) => badges.length > 0);
   if (activeCategories.length === 0) return [];
@@ -304,17 +366,12 @@ function generateSocials(state: ReadmeState): string[] {
   lines.push("## Connect with me");
   lines.push("");
 
-  activeCategories.forEach(([name, badges], index) => {
-    lines.push(`<p align="center">`);
-    lines.push(`<strong>${name}</strong><br/>`);
-    lines.push(badges.join(" "));
+  activeCategories.forEach(([name, badges]) => {
+    lines.push(`<p>`);
+    lines.push(`  <b>${name}:</b> <br />`);
+    lines.push(`  ${badges.join(" ")}`);
     lines.push(`</p>`);
-
-    if (index < activeCategories.length - 1) {
-      lines.push(`<p align="center">`);
-      lines.push(`  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" />`); // Hypothetical divider? No, I'll use a simple text one.
-      lines.push(`</p>`);
-    }
+    lines.push("");
   });
 
   return lines;
