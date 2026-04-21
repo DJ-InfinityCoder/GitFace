@@ -6,11 +6,12 @@ import { SectionsList } from "@/components/builder/sections-list";
 import { PreviewPanel } from "@/components/builder/preview-panel";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Zap, Loader2 } from "lucide-react";
+import { ArrowLeft, Zap, Loader2, Edit2, Eye } from "lucide-react";
 import Link from "next/link";
 
 export default function BuilderPage() {
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
 
   useEffect(() => {
     setHasHydrated(true);
@@ -82,7 +83,34 @@ export default function BuilderPage() {
                     </h1>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Mobile Tab Switcher */}
+                  <div className="flex lg:hidden bg-gh-muted rounded-md p-0.5 border border-gh-border">
+                    <button
+                      onClick={() => setActiveTab("edit")}
+                      className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-sm text-[10px] sm:text-xs font-medium transition-all ${
+                        activeTab === "edit"
+                          ? "bg-gh-bg text-gh-text shadow-sm border border-gh-border"
+                          : "text-gh-text-muted hover:text-gh-text"
+                      }`}
+                    >
+                      <Edit2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      Build
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("preview")}
+                      className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-sm text-[10px] sm:text-xs font-medium transition-all ${
+                        activeTab === "preview"
+                          ? "bg-gh-bg text-gh-text shadow-sm border border-gh-border"
+                          : "text-gh-text-muted hover:text-gh-text"
+                      }`}
+                    >
+                      <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      Preview
+                    </button>
+                  </div>
+
                   <p className="text-xs text-gh-text-subtle hidden md:block">
                     Changes update the preview instantly
                   </p>
@@ -95,10 +123,15 @@ export default function BuilderPage() {
             <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
               {/* Left Panel — Form */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="w-full lg:w-[42%] xl:w-[38%] 2xl:w-[34%] overflow-y-auto border-r border-gh-border/50 transition-colors"
+                initial={false}
+                animate={{ 
+                  opacity: activeTab === "edit" ? 1 : 0,
+                  x: activeTab === "edit" ? 0 : -20,
+                  pointerEvents: activeTab === "edit" ? "auto" : "none",
+                  display: activeTab === "edit" ? "block" : "none"
+                }}
+                transition={{ duration: 0.2 }}
+                className="w-full lg:!opacity-100 lg:!translate-x-0 lg:!pointer-events-auto lg:!block lg:w-[42%] xl:w-[38%] 2xl:w-[34%] overflow-y-auto border-r border-gh-border/50 transition-colors"
               >
                 <div className="p-4 lg:p-6 space-y-1">
                   <div className="mb-6">
@@ -115,10 +148,15 @@ export default function BuilderPage() {
 
               {/* Right Panel — Preview */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
-                className="flex-1 bg-gh-surface/30 overflow-hidden transition-colors"
+                initial={false}
+                animate={{ 
+                  opacity: activeTab === "preview" ? 1 : 0,
+                  x: activeTab === "preview" ? 0 : 20,
+                  pointerEvents: activeTab === "preview" ? "auto" : "none",
+                  display: activeTab === "preview" ? "block" : "none"
+                }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 lg:!opacity-100 lg:!translate-x-0 lg:!pointer-events-auto lg:!block bg-gh-surface/30 overflow-hidden transition-colors"
               >
                 <PreviewPanel />
               </motion.div>

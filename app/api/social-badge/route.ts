@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateSocialBadgeSVG } from "@/lib/github-stats-svg";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(
   request: NextRequest,
 ) {
@@ -19,9 +17,7 @@ export async function GET(
   return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml",
-      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-      "Pragma": "no-cache",
-      "Expires": "0",
+      "Cache-Control": "public, max-age=604800, stale-while-revalidate=3600",
     },
   });
 }

@@ -167,6 +167,42 @@ export function ProfileSection() {
       </div>
 
       <div className="pt-4 border-t border-gh-border/50 space-y-4">
+        <h3 className="text-sm font-semibold text-gh-text">Quick Facts</h3>
+        
+        {/* Quick Facts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Location</label>
+            <input type="text" value={basedIn} onChange={(e) => setField("basedIn", e.target.value)} placeholder="New York, USA" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Portfolio URL</label>
+            <input type="text" value={portfolioUrl} onChange={(e) => setField("portfolioUrl", e.target.value)} placeholder="https://..." className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Contact Email</label>
+            <input type="email" value={contactEmail} onChange={(e) => setField("contactEmail", e.target.value)} placeholder="me@example.com" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Working on</label>
+            <input type="text" value={workingOn} onChange={(e) => setField("workingOn", e.target.value)} placeholder="a new SaaS project" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Learning</label>
+            <input type="text" value={learning} onChange={(e) => setField("learning", e.target.value)} placeholder="Web3 & Rust" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Collaborating on</label>
+            <input type="text" value={collaboratingOn} onChange={(e) => setField("collaboratingOn", e.target.value)} placeholder="open source libraries" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Anything else</label>
+            <input type="text" value={anythingElse} onChange={(e) => setField("anythingElse", e.target.value)} placeholder="Fun fact: I love pizza!" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-4 border-t border-gh-border/50 space-y-4">
         <h3 className="text-sm font-semibold text-gh-text">Profile Options</h3>
         <button
           onClick={() => setField("showVisitorBadge", !showVisitorBadge)}
@@ -207,42 +243,6 @@ export function ProfileSection() {
             />
           </div>
         </button>
-      </div>
-
-      <div className="pt-4 border-t border-gh-border/50 space-y-4">
-        <h3 className="text-sm font-semibold text-gh-text">Quick Facts</h3>
-        
-        {/* Quick Facts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Location</label>
-            <input type="text" value={basedIn} onChange={(e) => setField("basedIn", e.target.value)} placeholder="New York, USA" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Portfolio URL</label>
-            <input type="text" value={portfolioUrl} onChange={(e) => setField("portfolioUrl", e.target.value)} placeholder="https://..." className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Contact Email</label>
-            <input type="email" value={contactEmail} onChange={(e) => setField("contactEmail", e.target.value)} placeholder="me@example.com" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Working on</label>
-            <input type="text" value={workingOn} onChange={(e) => setField("workingOn", e.target.value)} placeholder="a new SaaS project" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Learning</label>
-            <input type="text" value={learning} onChange={(e) => setField("learning", e.target.value)} placeholder="Web3 & Rust" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Collaborating on</label>
-            <input type="text" value={collaboratingOn} onChange={(e) => setField("collaboratingOn", e.target.value)} placeholder="open source libraries" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs font-medium text-gh-text-muted mb-1.5">Anything else</label>
-            <input type="text" value={anythingElse} onChange={(e) => setField("anythingElse", e.target.value)} placeholder="Fun fact: I love pizza!" className="w-full px-3 py-2 bg-gh-bg border border-gh-border rounded text-sm text-gh-text placeholder-gh-text-subtle focus:border-gh-green focus:ring-1 focus:ring-gh-green/30 outline-none transition-all" />
-          </div>
-        </div>
       </div>
     </div>
   );

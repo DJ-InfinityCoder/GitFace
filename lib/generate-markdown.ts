@@ -168,7 +168,8 @@ function generateTechStack(state: ReadmeState): string[] {
   if (activeCategories.length === 0) return [];
 
   const lines: string[] = [];
-  lines.push("## Tech Stack");
+  lines.push("");
+  lines.push("## Technologies I’ve worked with");
   lines.push("");
 
   activeCategories.forEach(([name, icons]) => {
@@ -201,7 +202,8 @@ function generateGitHubStats(state: ReadmeState): string[] {
 
   const username = state.githubUsername;
   const lines: string[] = [];
-  lines.push("## GitHub Stats");
+  lines.push("");
+  lines.push("## GitHub Insights");
   lines.push("");
 
   // Base URL for the API (Relative for preview, absolute for production)
@@ -315,6 +317,7 @@ function generateSocials(state: ReadmeState): string[] {
   if (activeCategories.length === 0) return [];
 
   const lines: string[] = [];
+  lines.push("");
   lines.push("## Connect with me");
   lines.push("");
 
