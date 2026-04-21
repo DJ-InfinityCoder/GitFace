@@ -2,19 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateTechBadgeSVG } from "@/lib/github-stats-svg";
 import { TECH_BADGES } from "@/lib/tech-badges";
 
-export const dynamic = "force-dynamic";
+// In-memory cache for fetched SVGs to avoid redundant network calls
+const SVG_CACHE: Record<string, string> = {};
 
 async function getIconRawContent(url: string): Promise<string> {
+  if (SVG_CACHE[url]) return SVG_CACHE[url];
+
   try {
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await fetch(url, { 
+      next: { revalidate: 86400 } // Cache for 24 hours in Next.js
+    });
     if (!response.ok) return "";
     let content = await response.text();
     // Remove XML declarations, DOCTYPEs and comments to prevent SVG nesting issues
-    return content
+    const cleaned = content
       .replace(/<\?xml.*\?>/gi, "")
       .replace(/<!DOCTYPE.*?>/gi, "")
       .replace(/<!--[\s\S]*?-->/g, "")
       .trim();
+    
+    SVG_CACHE[url] = cleaned;
+    return cleaned;
   } catch (e) {
     console.error(`Failed to fetch icon from ${url}:`, e);
     return "";
@@ -69,9 +77,7 @@ export async function GET(request: NextRequest) {
   return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml",
-      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-      "Pragma": "no-cache",
-      "Expires": "0",
+      "Cache-Control": "public, max-age=86400, stale-while-revalidate=43200",
     },
   });
 }
