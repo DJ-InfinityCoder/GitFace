@@ -118,8 +118,15 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <meta
+          name="google-site-verification"
+          content="LUxkWfxLL0S1eRoIX7IcujdeJwHpaytxZN54eA1KhdQ"
+        />
       </head>
-      <body suppressHydrationWarning className="min-h-full flex flex-col bg-gh-bg transition-colors duration-300">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-gh-bg transition-colors duration-300"
+      >
         <Providers>{children}</Providers>
       </body>
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-XYZ"} />
