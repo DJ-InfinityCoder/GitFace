@@ -5,8 +5,9 @@ import { useReadmeStore } from "@/store/readme-store";
 import { SectionsList } from "@/components/builder/sections-list";
 import { PreviewPanel } from "@/components/builder/preview-panel";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/ui/logo";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Zap, Loader2, Edit2, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Edit2, Eye } from "lucide-react";
 import Link from "next/link";
 
 export default function BuilderPage() {
@@ -40,17 +41,14 @@ export default function BuilderPage() {
               }}
               className="flex flex-col items-center gap-4"
             >
-              <div className="relative">
-                <Zap className="w-12 h-12 text-gh-green" />
+              <div className="relative mb-2">
+                <Logo size={64} />
                 <motion.div 
                   className="absolute inset-0 bg-gh-green/20 blur-xl rounded-full"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </div>
-              <h2 className="text-xl font-bold text-gh-text font-fira tracking-tight">
-                Git<span className="text-gh-green">Face</span>
-              </h2>
             </motion.div>
             <p className="text-sm text-gh-text-subtle mt-8 flex items-center gap-2">
               <Loader2 className="w-3 h-3 animate-spin" />
@@ -77,7 +75,7 @@ export default function BuilderPage() {
                   </Link>
                   <div className="w-px h-5 bg-gh-border" />
                   <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-gh-green" />
+                    <Logo size={24} />
                     <h1 className="text-sm font-bold text-gh-text font-fira">
                       Git<span className="text-gh-green">Face</span>
                     </h1>

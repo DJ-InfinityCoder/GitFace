@@ -3,13 +3,17 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
+import { GithubIcon } from "@/components/ui/github-icon";
 
 const PHRASES = [
   "Your GitHub profile. Reimagined.",
   "Stand out from the crowd.",
   "Build it in 60 seconds.",
 ];
+
+
 
 export function Hero() {
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -18,20 +22,18 @@ export function Hero() {
 
   const type = useCallback(() => {
     const currentPhrase = PHRASES[phraseIndex];
-
     if (!isDeleting) {
       if (displayText.length < currentPhrase.length) {
-        setTimeout(() => {
-          setDisplayText(currentPhrase.slice(0, displayText.length + 1));
-        }, 60);
+        setTimeout(
+          () => setDisplayText(currentPhrase.slice(0, displayText.length + 1)),
+          60
+        );
       } else {
         setTimeout(() => setIsDeleting(true), 2000);
       }
     } else {
       if (displayText.length > 0) {
-        setTimeout(() => {
-          setDisplayText(displayText.slice(0, -1));
-        }, 30);
+        setTimeout(() => setDisplayText(displayText.slice(0, -1)), 30);
       } else {
         setIsDeleting(false);
         setPhraseIndex((prev) => (prev + 1) % PHRASES.length);
@@ -45,83 +47,93 @@ export function Hero() {
   }, [type]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
-      {/* Background gradient orbs */}
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 text-center overflow-hidden">
+
+      {/* ── dot-grid background ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+      {/* ── gradient orbs ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gh-green/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gh-green/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[350px] bg-blue-500/6 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 right-0 w-[350px] h-[350px] bg-purple-500/5 rounded-full blur-[100px]" />
       </div>
 
-      {/* Logo */}
+
+      {/* ── logo ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex items-center gap-2 mb-8"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.55, delay: 0.05 }}
+        className="flex flex-col items-center mb-7"
       >
-        <div className="w-10 h-10 rounded bg-gh-green/15 flex items-center justify-center border border-gh-green/20">
-          <Zap className="w-5 h-5 text-gh-green" />
-        </div>
-        <span className="text-2xl font-bold text-gh-text font-fira">
-          Git<span className="text-gh-green">Face</span>
-        </span>
+        <Logo size={72} />
       </motion.div>
 
-      {/* Typewriter text */}
+      {/* ── typewriter headline ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="mb-6"
+        transition={{ duration: 0.6, delay: 0.18 }}
+        className="mb-5"
       >
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gh-text min-h-[1.3em] font-fira tracking-tight">
+        <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold text-gh-text min-h-[1.3em] font-fira tracking-tight leading-tight">
           <span>{displayText}</span>
-          <span className="typewriter-cursor ml-0.5">&nbsp;</span>
+          <span className="typewriter-cursor ml-0.5 opacity-70">&nbsp;</span>
         </h1>
       </motion.div>
 
-      {/* Subtitle */}
+      {/* ── subtitle ── */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="text-lg text-gh-text-muted max-w-lg mb-10"
+        transition={{ duration: 0.6, delay: 0.34 }}
+        className="text-base sm:text-lg text-gh-text-muted max-w-[480px] leading-relaxed mb-10"
       >
-        The fastest way to create a stunning GitHub profile README. Drag, drop,
-        customize, and copy — all in one place.
+        The fastest way to create a stunning GitHub profile README.
+        Drag, drop, customize, and copy — all in one place.
       </motion.p>
 
-      {/* CTA */}
+      {/* ── CTAs ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="flex flex-col sm:flex-row items-center gap-3 mb-14"
       >
         <Link
           href="/builder"
           id="cta-build-readme"
-          className="group inline-flex items-center gap-2 px-8 py-4 rounded bg-gh-green text-white dark:text-gh-bg font-bold text-lg hover:opacity-90 transition-all glow-green"
+          className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-lg
+            bg-gh-green text-white dark:text-gh-bg font-bold text-base
+            hover:opacity-90 active:scale-[0.98] transition-all
+            shadow-[0_0_24px_rgba(var(--gh-green-rgb),0.35)]
+            hover:shadow-[0_0_36px_rgba(var(--gh-green-rgb),0.5)]"
         >
           Build Your README
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+        </Link>
+
+        <Link
+          href="https://github.com/DJ-InfinityCoder/GitFace"
+          target="_blank"
+          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg
+            border border-white/10 bg-white/4 text-gh-text-muted text-base font-medium
+            hover:bg-white/8 hover:text-gh-text hover:border-white/18
+            active:scale-[0.98] transition-all backdrop-blur-sm"
+        >
+          <GithubIcon className="w-4 h-4" />
+          View Source
         </Link>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-5 h-8 rounded-full border-2 border-gh-border flex items-start justify-center p-1"
-        >
-          <div className="w-1 h-2 rounded-full bg-gh-green" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

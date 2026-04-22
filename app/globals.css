@@ -52,6 +52,7 @@
   --color-gh-surface: var(--gh-surface);
   --color-gh-border: var(--gh-border);
   --color-gh-green: var(--gh-green);
+  --color-gh-green-rgb: var(--gh-green-rgb);
   --color-gh-text: var(--gh-text);
   --color-gh-text-muted: var(--gh-text-muted);
   --color-gh-text-subtle: var(--gh-text-subtle);
@@ -68,6 +69,7 @@
   --gh-surface: #f6f8fa;
   --gh-border: #d1d9e0;
   --gh-green: #2da44e;
+  --gh-green-rgb: 45, 164, 78;
   --gh-text: #1f2328;
   --gh-text-muted: #656d76;
   --gh-text-subtle: #8b949e;
@@ -118,6 +120,7 @@
   --gh-surface: #161b22;
   --gh-border: #30363d;
   --gh-green: #39d353;
+  --gh-green-rgb: 57, 211, 83;
   --gh-text: #e6edf3;
   --gh-text-muted: #8b949e;
   --gh-text-subtle: #484f58;
