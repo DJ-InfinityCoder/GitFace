@@ -1,7 +1,7 @@
 # GitFace — The Ultimate GitHub Profile README Generator
 
 <p align="center">
-  <img src="gitface_logo_withname_light.png" alt="GitFace Logo" width="600px">
+  <img src="/public/gitface_logo_withname_light.png" alt="GitFace Logo" width="600px">
 </p>
 
 <p align="center">

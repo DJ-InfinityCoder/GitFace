@@ -1156,14 +1156,15 @@ const REPO_ICONS: Record<string, { path: string; color: string }> = {
 
 export function generateRepoBadgeSVG(type: string, value: string): string {
   const icon = REPO_ICONS[type.toLowerCase()] || REPO_ICONS.stars;
-  const label = type === 'launch' ? value : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
+  const isLaunch = type.toLowerCase() === 'launch';
+  const label = isLaunch ? value : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
   const gradId = `grad_repo_${type.toLowerCase()}`;
   const clipId = `clip_repo_${type.toLowerCase()}`;
 
   // Calculate widths 
-  const labelWidth = Math.max(label.length * 8.5, 60);
-  const iconZoneWidth = 36;
-  const totalWidth = iconZoneWidth + labelWidth + 12;
+  const labelWidth = Math.max(label.length * 9, 60);
+  const iconZoneWidth = isLaunch ? 0 : 36;
+  const totalWidth = isLaunch ? labelWidth + 48 : iconZoneWidth + labelWidth + 12;
   const rx = 6;
 
   return `
@@ -1175,7 +1176,7 @@ export function generateRepoBadgeSVG(type: string, value: string): string {
       <defs>
         <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="${icon.color}" />
-          <stop offset="100%" stop-color="${darkenColor(icon.color, 20)}" />
+          <stop offset="100%" stop-color="${darkenColor(icon.color, 25)}" />
         </linearGradient>
         <clipPath id="${clipId}">
           <rect width="${totalWidth}" height="32" rx="${rx}"/>
@@ -1183,17 +1184,31 @@ export function generateRepoBadgeSVG(type: string, value: string): string {
       </defs>
       
       <g clip-path="url(#${clipId})">
-        <rect class="icon-bg" width="${iconZoneWidth}" height="32"/>
-        <rect x="${iconZoneWidth}" width="${totalWidth - iconZoneWidth}" height="32" fill="url(#${gradId})"/>
+        ${isLaunch 
+          ? `<rect width="${totalWidth}" height="32" fill="url(#${gradId})"/>`
+          : `
+            <rect class="icon-bg" width="${iconZoneWidth}" height="32"/>
+            <rect x="${iconZoneWidth}" width="${totalWidth - iconZoneWidth}" height="32" fill="url(#${gradId})"/>
+          `
+        }
       </g>
       
-      <rect x="0.75" y="0.75" width="${totalWidth - 1.5}" height="30.5" rx="${rx - 0.75}" stroke="${icon.color}" stroke-width="1.5" fill="none"/>
+      <rect x="0.75" y="0.75" width="${totalWidth - 1.5}" height="30.5" rx="${rx - 0.75}" stroke="${isLaunch ? 'rgba(255,255,255,0.2)' : icon.color}" stroke-width="1.5" fill="none"/>
       
-      <g transform="translate(18, 16) scale(1.2)">
-        <path d="${icon.path}" fill="${icon.color}" transform="translate(-8, -8)" />
-      </g>
-      
-      <text x="${iconZoneWidth + 8}" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="600">${label}</text>
+      ${isLaunch 
+        ? `
+          <g transform="translate(18, 16) scale(1.1)">
+            <path d="${icon.path}" fill="white" transform="translate(-8, -8)" />
+          </g>
+          <text x="38" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="700" letter-spacing="0.2">${label}</text>
+        `
+        : `
+          <g transform="translate(18, 16) scale(1.2)">
+            <path d="${icon.path}" fill="${icon.color}" transform="translate(-8, -8)" />
+          </g>
+          <text x="${iconZoneWidth + 8}" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="600">${label}</text>
+        `
+      }
     </svg>
   `.trim();
 }
