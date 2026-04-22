@@ -110,7 +110,7 @@ export interface ReadmeActions {
   addTech: (tech: TechStackItem) => void;
   removeTech: (name: string) => void;
   setTechStack: (techStack: TechStackItem[]) => void;
-  reset: () => void;
+  reset: () => void | Promise<void>;
   setGitHubData: (data: {
     avatarUrl: string;
     followers: number;
@@ -239,7 +239,24 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
           techStack: state.techStack.filter((t) => t.name !== name),
         })),
       setTechStack: (techStack) => set({ techStack }),
-      reset: () => {
+      reset: async () => {
+        // Get current username before resetting
+        const { githubUsername } = useReadmeStore.getState();
+
+        // 1. Clear server-side API cache for this user
+        if (githubUsername) {
+          try {
+            await fetch("/api/clear-cache", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username: githubUsername }),
+            });
+          } catch (e) {
+            console.error("Failed to clear server cache:", e);
+          }
+        }
+
+        // 2. Clear local storage and reset state
         localStorage.removeItem("gitface-readme-config");
         set({
           name: "",
@@ -269,6 +286,45 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
           showOSS: true,
           showActivity: true,
           showPersona: true,
+          twitter: "",
+          linkedin: "",
+          portfolio: "",
+          youtube: "",
+          discord: "",
+          instagram: "",
+          facebook: "",
+          stackoverflow: "",
+          devto: "",
+          medium: "",
+          hashnode: "",
+          twitch: "",
+          codepen: "",
+          leetcode: "",
+          reddit: "",
+          pinterest: "",
+          threads: "",
+          bluesky: "",
+          mastodon: "",
+          kaggle: "",
+          hackerrank: "",
+          codewars: "",
+          codeforces: "",
+          geeksforgeeks: "",
+          topcoder: "",
+          codechef: "",
+          codestudio: "",
+          interviewbit: "",
+          atcoder: "",
+          exercism: "",
+          tryhackme: "",
+          substack: "",
+          ghost: "",
+          writeas: "",
+          tiktok: "",
+          telegram: "",
+          whatsapp: "",
+          signal: "",
+          snapchat: "",
           showVisitorBadge: true,
           customMarkdown: "",
           sections: DEFAULT_SECTIONS,
