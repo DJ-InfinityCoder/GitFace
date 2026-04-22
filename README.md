@@ -1,7 +1,7 @@
 # GitFace — The Ultimate GitHub Profile README Generator
 
 <p align="center">
-  <img src="/public/gitface_logo_withname_light.png" alt="GitFace Logo" width="600px">
+  <img src="/public/gitface_logo_withname_light.png" alt="GitFace Logo" width="400px">
 </p>
 
 <p align="center">
@@ -11,19 +11,19 @@
 
 <p align="center">
   <a href="https://github.com/DJ-InfinityCoder/GitFace/stargazers">
-    <img src="https://gitface.dilip.live/api/repo-stats?type=stars" alt="GitHub Stars">
+    <img src="https://gitface.dilip.live/api/gitface-stats?type=stars" alt="GitHub Stars">
   </a>
   <a href="https://github.com/DJ-InfinityCoder/GitFace/network/members">
-    <img src="https://gitface.dilip.live/api/repo-stats?type=forks" alt="GitHub Forks">
+    <img src="https://gitface.dilip.live/api/gitface-stats?type=forks" alt="GitHub Forks">
   </a>
   <a href="https://github.com/DJ-InfinityCoder/GitFace/blob/main/LICENSE">
-    <img src="https://gitface.dilip.live/api/repo-stats?type=license" alt="Project License">
+    <img src="https://gitface.dilip.live/api/gitface-stats?type=license" alt="Project License">
   </a>
 </p>
 
 <p align="center">
   <a href="https://gitface.dilip.live" target="_blank">
-    <img src="https://gitface.dilip.live/api/repo-stats?type=launch" alt="Launch App">
+    <img src="https://gitface.dilip.live/api/gitface-stats?type=launch" alt="Visit Website">
   </a>
 </p>
 
@@ -103,5 +103,5 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 ---
 
 <p align="center">
-  Crafted with precision by the <b>GitFace Community</b>
+  Built with ❤️ for the Developer Community
 </p>

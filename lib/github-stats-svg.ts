@@ -1149,8 +1149,8 @@ const REPO_ICONS: Record<string, { path: string; color: string }> = {
     color: "#0969da", // GitHub Blue
   },
   launch: {
-    path: "M10.828 7c-.201 0-.306.242-.164.384l1.328 1.328-1.5 1.5-1.414-1.414c-.195-.195-.512-.195-.707 0s-.195.512 0 .707l1.414 1.414-1.5 1.5-1.328-1.328a.2.2 0 0 0-.342.141V12h2v-1.172l1.5-1.5H12v-2h-.172l-1-1ZM7 10.828V12h2v-1.172l1.5-1.5H12v-2h-.172l-1-1c-.201 0-.306.242-.164.384l1.328 1.328-1.5 1.5-1.414-1.414c-.195-.195-.512-.195-.707 0s-.195.512 0 .707l1.414 1.414-1.5 1.5-1.328-1.328a.2.2 0 0 0-.342.141ZM2 10V2h8v2H4v8h8V6h2V2.5A1.5 1.5 0 0 0 12.5 1h-10A1.5 1.5 0 0 0 1 2.5v10A1.5 1.5 0 0 0 2.5 14h10a1.5 1.5 0 0 0 1.5-1.5V9h-2v3H3v-8h1v-2H2v8Z",
-    color: "#2da44e", // Green
+    path: "M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM5.78 8.75a9.64 9.64 0 0 0 1.35 3.48c.12.19.24.37.37.54a6.507 6.507 0 0 1-4.14-4.02Zm0-1.5H3a6.507 6.507 0 0 1 4.14-4.02 9.64 9.64 0 0 0-1.35 3.48c-.12.19-.24.37-.37.54Zm1.5 0c.12-.17.23-.35.34-.54a7.92 7.92 0 0 1 .41-2.36 7.92 7.92 0 0 1 .41 2.36c.11.19.22.37.34.54H7.28Zm0 1.5h1.44c-.12.17-.23.35-.34.54a7.92 7.92 0 0 1-.41 2.36 7.92 7.92 0 0 1-.41-2.36 7.92 7.92 0 0 1-.34-.54Zm1.5 0h2.72a6.507 6.507 0 0 1-4.14 4.02 9.64 9.64 0 0 0 1.35-3.48c.12-.19.24-.37.37-.54Zm0-1.5c-.12-.17-.24-.35-.37-.54a9.64 9.64 0 0 0-1.35-3.48A6.507 6.507 0 0 1 13 7.25h-2.72Zm-1.85-5.59A7.904 7.904 0 0 1 8 1.5a7.904 7.904 0 0 1 1.07.16c-.05.1-.11.23-.17.38a9.44 9.44 0 0 0-.17 3.71h-1.46a9.44 9.44 0 0 0-.17-3.71c-.06-.15-.12-.28-.17-.38ZM8 14.5a7.904 7.904 0 0 1-1.07-.16c.05-.1.11-.23.17-.38a9.44 9.44 0 0 0 .17-3.71h1.46a9.44 9.44 0 0 0 .17 3.71c.06.15.12.28.17.38a7.904 7.904 0 0 1-1.07.16Z",
+    color: "#2da44e", // GitHub Green
   }
 };
 
@@ -1164,7 +1164,7 @@ export function generateRepoBadgeSVG(type: string, value: string): string {
   // Calculate widths 
   const labelWidth = Math.max(label.length * 9, 60);
   const iconZoneWidth = isLaunch ? 0 : 36;
-  const totalWidth = isLaunch ? labelWidth + 48 : iconZoneWidth + labelWidth + 12;
+  const totalWidth = isLaunch ? labelWidth + 32 : iconZoneWidth + labelWidth + 12;
   const rx = 6;
 
   return `
@@ -1196,12 +1196,7 @@ export function generateRepoBadgeSVG(type: string, value: string): string {
       <rect x="0.75" y="0.75" width="${totalWidth - 1.5}" height="30.5" rx="${rx - 0.75}" stroke="${isLaunch ? 'rgba(255,255,255,0.2)' : icon.color}" stroke-width="1.5" fill="none"/>
       
       ${isLaunch 
-        ? `
-          <g transform="translate(18, 16) scale(1.1)">
-            <path d="${icon.path}" fill="white" transform="translate(-8, -8)" />
-          </g>
-          <text x="38" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="700" letter-spacing="0.2">${label}</text>
-        `
+        ? `<text x="${totalWidth / 2}" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="700" letter-spacing="0.2" text-anchor="middle">${label}</text>`
         : `
           <g transform="translate(18, 16) scale(1.2)">
             <path d="${icon.path}" fill="${icon.color}" transform="translate(-8, -8)" />

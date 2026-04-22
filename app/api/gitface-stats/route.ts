@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
       next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         "Accept": "application/vnd.github.v3+json",
-        // Add User-Agent as required by GitHub API
         "User-Agent": "GitFace-Badge-Generator"
       }
     });
@@ -29,6 +28,8 @@ export async function GET(req: NextRequest) {
       value = data.forks_count?.toLocaleString() || "0";
     } else if (type === "license") {
       value = data.license?.spdx_id || "MIT";
+    } else if (type === "launch") {
+      value = "Visit Website";
     }
 
     const svg = generateRepoBadgeSVG(type, value);
@@ -37,11 +38,11 @@ export async function GET(req: NextRequest) {
       headers: {
         "Content-Type": "image/svg+xml",
         "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        // "Cache-Control": "no-cache"
       },
     });
   } catch (error) {
     console.error("Error fetching repo stats:", error);
-    // Return a fallback badge with "?" instead of error to keep it clean
     const svg = generateRepoBadgeSVG(type, "...");
     return new NextResponse(svg, {
       headers: { 
