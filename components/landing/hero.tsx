@@ -113,9 +113,7 @@ export function Hero() {
           id="cta-build-readme"
           className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-lg
             bg-gh-green text-white dark:text-gh-bg font-bold text-base
-            hover:opacity-90 active:scale-[0.98] transition-all
-            shadow-[0_0_24px_rgba(var(--gh-green-rgb),0.35)]
-            hover:shadow-[0_0_36px_rgba(var(--gh-green-rgb),0.5)]"
+            hover:opacity-90 active:scale-[0.98] transition-all"
         >
           Build Your README
           <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
@@ -125,13 +123,25 @@ export function Hero() {
           href="https://github.com/DJ-InfinityCoder/GitFace"
           target="_blank"
           className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg
-            border border-white/10 bg-white/4 text-gh-text-muted text-base font-medium
-            hover:bg-white/8 hover:text-gh-text hover:border-white/18
-            active:scale-[0.98] transition-all backdrop-blur-sm"
+            border border-gh-border text-gh-text-muted text-base font-medium
+            hover:text-gh-text hover:border-gh-text-muted
+            active:scale-[0.98] transition-all"
         >
           <GithubIcon className="w-4 h-4" />
           View Source
         </Link>
+      </motion.div>
+      
+      {/* ── open source callout ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.2 }}
+        className="max-w-[500px] text-gh-text-muted/60 text-sm"
+      >
+        GitFace is open source! 🚀 If you want to contribute, 
+        you can check the <a href="https://github.com/DJ-InfinityCoder/GitFace" target="_blank" rel="noopener noreferrer" className="text-gh-text-muted hover:text-gh-green underline underline-offset-4 transition-colors">GitHub repo</a> and 
+        read the README to start contributing to this project.
       </motion.div>
 
     </section>

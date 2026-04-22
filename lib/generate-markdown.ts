@@ -108,20 +108,24 @@ function generateProfile(state: ReadmeState): string[] {
   }
 
   if (factItems.length > 0) {
-    lines.push(`<div align="center">`);
-    lines.push(`  <table>`);
+    lines.push("### Quick Facts");
+    lines.push("");
+    lines.push('<div align="center">');
+    lines.push("");
+    lines.push("  <table>");
     for (const item of factItems) {
       const textContent = item.link
         ? `<a href="${item.link}">${item.text}</a>`
         : item.text;
       
-      lines.push(`    <tr>`);
+      lines.push("    <tr>");
       lines.push(`      <td align="left" width="30%"><img src="${baseUrl}/api/fact-icon?type=${item.type}" width="18" height="18" alt="${item.type}" valign="middle" /> &nbsp; <b>${item.label}</b></td>`);
       lines.push(`      <td align="left">${textContent}</td>`);
-      lines.push(`    </tr>`);
+      lines.push("    </tr>");
     }
-    lines.push(`  </table>`);
-    lines.push(`</div>`);
+    lines.push("  </table>");
+    lines.push("");
+    lines.push("</div>");
     lines.push("");
   }
 
@@ -146,39 +150,19 @@ function generateTechStack(state: ReadmeState): string[] {
   if (state.techStack.length === 0) return [];
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
 
-  const categories: Record<string, string[]> = {
-    "Frontend": [],
-    "Backend": [],
-    "DevOps": [],
-    "Tools": [],
-  };
-
-  // Populate categories - maintain methodology of generateSocials
-  state.techStack.forEach((tech) => {
-    const cat = tech.category;
-    if (!categories[cat]) {
-      categories[cat] = [];
-    }
-    categories[cat].push(
-      `<img src="${baseUrl}/api/tech-badge?name=${encodeURIComponent(tech.id || tech.name)}" alt="${tech.name}" title="${tech.name}" height="36" hspace="10" vspace="10" />`
-    );
-  });
-
-  const activeCategories = Object.entries(categories).filter(([_, icons]) => icons.length > 0);
-  if (activeCategories.length === 0) return [];
-
   const lines: string[] = [];
   lines.push("");
   lines.push("## Technologies I’ve worked with");
   lines.push("");
 
-  activeCategories.forEach(([name, icons]) => {
-    lines.push(`<p>`);
-    lines.push(`  <b>${name}:</b> <br />`);
-    lines.push(`  ${icons.join(" ")}`);
-    lines.push(`</p>`);
-    lines.push("");
-  });
+  const icons = state.techStack.map((tech) => 
+    `<img src="${baseUrl}/api/tech-badge?name=${encodeURIComponent(tech.id || tech.name)}" alt="${tech.name}" title="${tech.name}" height="36" hspace="10" vspace="10" />`
+  );
+
+  lines.push(`<p align="center">`);
+  lines.push(`  ${icons.join(" ")}`);
+  lines.push(`</p>`);
+  lines.push("");
 
   return lines;
 }
@@ -213,37 +197,37 @@ function generateGitHubStats(state: ReadmeState): string[] {
   lines.push('<p align="center">');
 
   if (state.showStats) {
-    lines.push(`  <img src="${baseUrl}/api/stats/${username}?theme=${theme}" alt="GitHub Stats" />`);
+    lines.push(`  <img src="${baseUrl}/api/stats/${username}?theme=${theme}" alt="GitHub Stats" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showStreak) {
-    lines.push(`  <img src="${baseUrl}/api/streak/${username}?theme=${theme}" alt="GitHub Streak" />`);
+    lines.push(`  <img src="${baseUrl}/api/streak/${username}?theme=${theme}" alt="GitHub Streak" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showTopLangs) {
-    lines.push(`  <img src="${baseUrl}/api/langs/${username}?theme=${theme}" alt="Top Languages" />`);
+    lines.push(`  <img src="${baseUrl}/api/langs/${username}?theme=${theme}" alt="Top Languages" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showTrophies) {
-    lines.push(`  <img src="${baseUrl}/api/trophies/${username}?theme=${theme}" alt="GitHub Trophies" />`);
+    lines.push(`  <img src="${baseUrl}/api/trophies/${username}?theme=${theme}" alt="GitHub Trophies" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showPersona) {
-    lines.push(`  <img src="${baseUrl}/api/persona/${username}?theme=${theme}" alt="Developer Persona" />`);
+    lines.push(`  <img src="${baseUrl}/api/persona/${username}?theme=${theme}" alt="Developer Persona" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showHighlights) {
-    lines.push(`  <img src="${baseUrl}/api/highlights/${username}?theme=${theme}" alt="Top Repositories" />`);
+    lines.push(`  <img src="${baseUrl}/api/highlights/${username}?theme=${theme}" alt="Top Repositories" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showPulse) {
-    lines.push(`  <img src="${baseUrl}/api/pulse/${username}?theme=${theme}" alt="Productivity Pulse" />`);
+    lines.push(`  <img src="${baseUrl}/api/pulse/${username}?theme=${theme}" alt="Productivity Pulse" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showMonthlyPulse) {
-    lines.push(`  <img src="${baseUrl}/api/pulse-monthly/${username}?theme=${theme}" alt="Monthly Productivity Pulse" />`);
+    lines.push(`  <img src="${baseUrl}/api/pulse-monthly/${username}?theme=${theme}" alt="Monthly Productivity Pulse" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showYearlyPulse) {
-    lines.push(`  <img src="${baseUrl}/api/pulse-yearly/${username}?theme=${theme}" alt="Yearly Growth Pulse" />`);
+    lines.push(`  <img src="${baseUrl}/api/pulse-yearly/${username}?theme=${theme}" alt="Yearly Growth Pulse" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showOSS) {
-    lines.push(`  <img src="${baseUrl}/api/oss/${username}?theme=${theme}" alt="Open Source Impact" />`);
+    lines.push(`  <img src="${baseUrl}/api/oss/${username}?theme=${theme}" alt="Open Source Impact" hspace="10" vspace="5" height="150" />`);
   }
   if (state.showActivity) {
-    lines.push(`  <img src="${baseUrl}/api/activity/${username}?theme=${theme}" alt="Profile Pulse" />`);
+    lines.push(`  <img src="${baseUrl}/api/activity/${username}?theme=${theme}" alt="Profile Pulse" hspace="10" vspace="5" height="150" />`);
   }
 
   lines.push("</p>");

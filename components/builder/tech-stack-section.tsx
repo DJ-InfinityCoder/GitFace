@@ -9,25 +9,8 @@ import { Tooltip } from "@/components/ui/tooltip";
 export function TechStackSection() {
   const { techStack, addTech, removeTech } = useReadmeStore();
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const techStackCategories = useMemo(() => {
-    const cats = new Set(techStack.map((t) => t.category));
-    return ["All", ...Array.from(cats)].sort();
-  }, [techStack]);
-
-  const filteredSelected = useMemo(() => {
-    if (selectedCategory === "All") return techStack;
-    return techStack.filter((t) => t.category === selectedCategory);
-  }, [techStack, selectedCategory]);
-
   const filteredBadges = useMemo(() => {
     let badges: TechBadge[] = TECH_BADGES;
-
-    if (activeCategory !== "All") {
-      badges = badges.filter((b) => b.category === activeCategory);
-    }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
@@ -35,7 +18,7 @@ export function TechStackSection() {
     }
 
     return badges;
-  }, [searchQuery, activeCategory]);
+  }, [searchQuery]);
 
   const isSelected = (name: string) =>
     techStack.some((t) => t.name === name);
@@ -52,27 +35,10 @@ export function TechStackSection() {
             </span>
           </div>
 
-          {/* Selected Category Filters */}
-          {techStackCategories.length > 2 && (
-            <div className="flex flex-wrap gap-1.5 pt-1 px-1">
-              {techStackCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all ${
-                    selectedCategory === cat
-                      ? "bg-gh-green/15 text-gh-green border border-gh-green/30"
-                      : "bg-gh-muted text-gh-text-muted border border-transparent hover:text-gh-text hover:bg-gh-border"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
+
 
           <div className="flex flex-wrap gap-4 pt-1 px-1 min-h-[50px]">
-            {filteredSelected.map((tech) => (
+            {techStack.map((tech) => (
               <Tooltip key={tech.name} content={tech.name}>
                 <div
                   className="relative group p-2 rounded bg-gh-muted border border-gh-border transition-all hover:border-gh-green/50"
@@ -94,11 +60,7 @@ export function TechStackSection() {
               </Tooltip>
             ))}
             
-            {filteredSelected.length === 0 && (
-              <p className="text-xs text-gh-text-subtle italic py-2">
-                No selected items in this category.
-              </p>
-            )}
+
           </div>
 
 
@@ -122,22 +84,7 @@ export function TechStackSection() {
           />
         </div>
 
-        {/* Category tabs */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-          {["All", ...CATEGORIES].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
-                activeCategory === cat
-                  ? "bg-gh-green/15 text-gh-green border border-gh-green/30"
-                  : "bg-gh-muted text-gh-text-muted border border-transparent hover:text-gh-text hover:bg-gh-border"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+
 
         {/* Badge grid */}
         <div className="grid grid-cols-2 gap-2 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">

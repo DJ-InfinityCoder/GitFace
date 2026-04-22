@@ -11,7 +11,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
   return (
     <button
       onClick={toggleTheme}
-      className={`relative flex items-center justify-center p-2 text-gh-text-muted hover:text-gh-text transition-colors ${className}`}
+      className={`relative cursor-pointer flex items-center justify-center p-2 text-gh-text-muted hover:text-gh-text transition-colors ${className}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       <motion.div

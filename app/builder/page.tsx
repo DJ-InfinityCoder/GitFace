@@ -154,7 +154,7 @@ export default function BuilderPage() {
                   display: activeTab === "preview" ? "block" : "none"
                 }}
                 transition={{ duration: 0.2 }}
-                className="flex-1 lg:!opacity-100 lg:!translate-x-0 lg:!pointer-events-auto lg:!block bg-gh-surface/30 overflow-hidden transition-colors"
+                className="flex-1 lg:!opacity-100 lg:!-translate-x-5 lg:!pointer-events-auto lg:!block bg-gh-surface/30 overflow-hidden transition-colors"
               >
                 <PreviewPanel />
               </motion.div>
