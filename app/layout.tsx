@@ -60,7 +60,7 @@ export const metadata: Metadata = {
       "Stop settling for a boring GitHub profile. Create a high-fidelity, professional README with dynamic stats, streaks, and custom badges in under a minute.",
     images: [
       {
-        url: "/gitface_logo_withname_light.png",
+        url: "/gitface_logo_withname_light_not_scaled.png",
         width: 1200,
         height: 630,
         alt: "GitFace Professional README Generator Preview",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "GitFace — The Ultimate GitHub Profile README Generator",
     description:
       "Transform your GitHub profile with dynamic stats and high-fidelity tech badges. Build a professional README in seconds.",
-    images: ["/gitface_logo_withname_light.png"],
+    images: ["/gitface_logo_withname_light_not_scaled.png"],
     creator: "@gitface",
   },
   icons: {
