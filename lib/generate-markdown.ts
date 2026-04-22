@@ -112,14 +112,14 @@ function generateProfile(state: ReadmeState): string[] {
     lines.push("");
     lines.push('<div align="center">');
     lines.push("");
-    lines.push("  <table>");
+    lines.push('  <table width="100%">');
     for (const item of factItems) {
       const textContent = item.link
         ? `<a href="${item.link}">${item.text}</a>`
         : item.text;
       
       lines.push("    <tr>");
-      lines.push(`      <td align="left" width="30%"><img src="${baseUrl}/api/fact-icon?type=${item.type}" width="18" height="18" alt="${item.type}" valign="middle" /> &nbsp; <b>${item.label}</b></td>`);
+      lines.push(`      <td align="left" nowrap><img src="${baseUrl}/api/fact-icon?type=${item.type}" width="18" height="18" alt="${item.type}" valign="middle" /> &nbsp; <b>${item.label}</b></td>`);
       lines.push(`      <td align="left">${textContent}</td>`);
       lines.push("    </tr>");
     }
