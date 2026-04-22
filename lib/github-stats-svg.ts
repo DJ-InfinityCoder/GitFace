@@ -1135,6 +1135,69 @@ export function generateSocialBadgeSVG(platform: string, value: string): string 
   `.trim();
 }
 
+const REPO_ICONS: Record<string, { path: string; color: string }> = {
+  stars: {
+    path: "M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z",
+    color: "#e3b341", // Star Gold
+  },
+  forks: {
+    path: "M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z",
+    color: "#2da44e", // GitHub Green
+  },
+  license: {
+    path: "M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9ZM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13ZM3 5.75A.75.75 0 0 1 3.75 5h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 5.75Zm0 2A.75.75 0 0 1 3.75 7h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 7.75Zm0 2A.75.75 0 0 1 3.75 9h5.5a.75.75 0 0 1 0 1.5h-5.5A.75.75 0 0 1 3 9.75Z",
+    color: "#0969da", // GitHub Blue
+  },
+  launch: {
+    path: "M10.828 7c-.201 0-.306.242-.164.384l1.328 1.328-1.5 1.5-1.414-1.414c-.195-.195-.512-.195-.707 0s-.195.512 0 .707l1.414 1.414-1.5 1.5-1.328-1.328a.2.2 0 0 0-.342.141V12h2v-1.172l1.5-1.5H12v-2h-.172l-1-1ZM7 10.828V12h2v-1.172l1.5-1.5H12v-2h-.172l-1-1c-.201 0-.306.242-.164.384l1.328 1.328-1.5 1.5-1.414-1.414c-.195-.195-.512-.195-.707 0s-.195.512 0 .707l1.414 1.414-1.5 1.5-1.328-1.328a.2.2 0 0 0-.342.141ZM2 10V2h8v2H4v8h8V6h2V2.5A1.5 1.5 0 0 0 12.5 1h-10A1.5 1.5 0 0 0 1 2.5v10A1.5 1.5 0 0 0 2.5 14h10a1.5 1.5 0 0 0 1.5-1.5V9h-2v3H3v-8h1v-2H2v8Z",
+    color: "#2da44e", // Green
+  }
+};
+
+export function generateRepoBadgeSVG(type: string, value: string): string {
+  const icon = REPO_ICONS[type.toLowerCase()] || REPO_ICONS.stars;
+  const label = type === 'launch' ? value : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
+  const gradId = `grad_repo_${type.toLowerCase()}`;
+  const clipId = `clip_repo_${type.toLowerCase()}`;
+
+  // Calculate widths 
+  const labelWidth = Math.max(label.length * 8.5, 60);
+  const iconZoneWidth = 36;
+  const totalWidth = iconZoneWidth + labelWidth + 12;
+  const rx = 6;
+
+  return `
+    <svg width="${totalWidth}" height="32" viewBox="0 0 ${totalWidth} 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        .icon-bg { fill: #ffffff; fill-opacity: 1; }
+        @media (prefers-color-scheme: dark) { .icon-bg { fill-opacity: 0.3; } }
+      </style>
+      <defs>
+        <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${icon.color}" />
+          <stop offset="100%" stop-color="${darkenColor(icon.color, 20)}" />
+        </linearGradient>
+        <clipPath id="${clipId}">
+          <rect width="${totalWidth}" height="32" rx="${rx}"/>
+        </clipPath>
+      </defs>
+      
+      <g clip-path="url(#${clipId})">
+        <rect class="icon-bg" width="${iconZoneWidth}" height="32"/>
+        <rect x="${iconZoneWidth}" width="${totalWidth - iconZoneWidth}" height="32" fill="url(#${gradId})"/>
+      </g>
+      
+      <rect x="0.75" y="0.75" width="${totalWidth - 1.5}" height="30.5" rx="${rx - 0.75}" stroke="${icon.color}" stroke-width="1.5" fill="none"/>
+      
+      <g transform="translate(18, 16) scale(1.2)">
+        <path d="${icon.path}" fill="${icon.color}" transform="translate(-8, -8)" />
+      </g>
+      
+      <text x="${iconZoneWidth + 8}" y="21" fill="white" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="14" font-weight="600">${label}</text>
+    </svg>
+  `.trim();
+}
+
 export function generateVisitorBadgeSVG(total: number, unique: number): string {
   const label = "Profile Visitors";
   const stats = `${total} Total • ${unique} Unique`;
