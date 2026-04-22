@@ -1317,3 +1317,37 @@ export function generateFactIconSVG(type: string): string {
   `.trim();
 }
 
+export function generateFactBadgeSVG(type: string, label: string, value: string, theme: "light" | "dark" = "dark"): string {
+  const content = `${label}: ${value}`;
+  const labelWidth = Math.max(content.length * 8.2, 50);
+  const iconZoneWidth = 32;
+  const totalWidth = iconZoneWidth + labelWidth + 16;
+  const rx = 6;
+  
+  const isLight = theme === "light";
+  const bgColor = isLight ? "#ffffff" : "#0d1117";
+  const borderColor = isLight ? "#d0d7de" : "#30363d";
+  const textColor = isLight ? "#24292f" : "#e6edf3";
+  const mutedColor = isLight ? "#656d76" : "#7d8590";
+  const iconStroke = isLight ? "#0969da" : "#58a6ff";
+
+  const paths = FACT_ICONS[type.toLowerCase()] || FACT_ICONS.location;
+
+  return `
+    <svg width="${totalWidth}" height="36" viewBox="0 0 ${totalWidth} 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="${totalWidth}" height="36" rx="${rx}" fill="${bgColor}" />
+      
+      <!-- Icon Zone -->
+      <g transform="translate(8, 8) scale(0.83)">
+        ${paths.map((d) => `<path d="${d}" stroke="${iconStroke}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />`).join("")}
+      </g>
+      
+      <!-- Content Text -->
+      <text x="${iconZoneWidth + 6}" y="22" fill="${textColor}" font-family="'Segoe UI', Ubuntu, Sans-Serif" font-size="13" font-weight="400">
+        <tspan fill="${mutedColor}" font-weight="600">${label}:</tspan> ${value}
+      </text>
+    </svg>
+  `.trim();
+}
+
+

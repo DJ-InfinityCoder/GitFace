@@ -11,7 +11,7 @@ export function getSectionMarkdown(state: ReadmeState, sectionId: string): strin
 
   const generator = sectionGenerators[sectionId];
   if (!generator) return "";
-  
+
   const lines = generator();
   return lines.length > 0 ? lines.join("\n") : "";
 }
@@ -108,24 +108,23 @@ function generateProfile(state: ReadmeState): string[] {
   }
 
   if (factItems.length > 0) {
+    const theme = state.previewTheme || "dark";
     lines.push("### Quick Facts");
     lines.push("");
-    lines.push('<div align="center">');
-    lines.push("");
-    lines.push('  <table width="100%">');
-    for (const item of factItems) {
-      const textContent = item.link
-        ? `<a href="${item.link}">${item.text}</a>`
-        : item.text;
-      
-      lines.push("    <tr>");
-      lines.push(`      <td align="left" nowrap><img src="${baseUrl}/api/fact-icon?type=${item.type}" width="18" height="18" alt="${item.type}" valign="middle" /> &nbsp; <b>${item.label}</b></td>`);
-      lines.push(`      <td align="left">${textContent}</td>`);
-      lines.push("    </tr>");
-    }
-    lines.push("  </table>");
-    lines.push("");
-    lines.push("</div>");
+    lines.push('<p align="left">');
+
+    const badges = factItems.map(item => {
+      const qs = new URLSearchParams({
+        type: item.type,
+        label: item.label,
+        value: item.text.replace(/<[^>]*>/g, ""), // Strip HTML tags like <b>
+        theme: theme
+      });
+      return `<img src="${baseUrl}/api/fact-icon?${qs.toString()}" alt="${item.label}" height="36" hspace="10" vspace="5" />`;
+    });
+
+    lines.push(`  ${badges.join("<br />")}`);
+    lines.push("</p>");
     lines.push("");
   }
 
@@ -155,7 +154,7 @@ function generateTechStack(state: ReadmeState): string[] {
   lines.push("## Technologies I’ve worked with");
   lines.push("");
 
-  const icons = state.techStack.map((tech) => 
+  const icons = state.techStack.map((tech) =>
     `<img src="${baseUrl}/api/tech-badge?name=${encodeURIComponent(tech.id || tech.name)}" alt="${tech.name}" title="${tech.name}" height="36" hspace="10" vspace="10" />`
   );
 

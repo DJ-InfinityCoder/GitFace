@@ -147,7 +147,7 @@ export function PreviewPanel() {
   const isRaw = viewMode === "raw";
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gh-border bg-gh-surface/80 backdrop-blur-sm transition-colors">
         <div className="flex items-center gap-1.5">
