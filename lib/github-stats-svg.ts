@@ -1260,9 +1260,7 @@ export function generateTechBadgeSVG(name: string, color: string, iconContent: s
 
     processedIcon = `
       <svg width="36" height="36" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
-        <g fill="white">
-          ${innerContent}
-        </g>
+        ${innerContent}
       </svg>
     `;
   }

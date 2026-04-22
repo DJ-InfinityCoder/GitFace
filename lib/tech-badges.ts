@@ -228,7 +228,7 @@ export const TECH_BADGES: TechBadge[] = [
   { name: "Rails", category: "Backend", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/rails.svg", color: "#000000", iconId: "rails" },
   { name: "Railway", category: "DevOps", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/railway.svg", color: "#000000", iconId: "railway" },
   { name: "React Query", category: "Frontend", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/react-query.svg", color: "#000000", iconId: "react-query" },
-  { name: "Reactjs", category: "Frontend", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/reactjs.svg", color: "#000000", iconId: "reactjs" },
+  { name: "Reactjs", category: "Frontend", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/reactjs.svg", color: "#61DAFB", iconId: "reactjs" },
   { name: "Reactrouter", category: "Frontend", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/reactrouter.svg", color: "#000000", iconId: "reactrouter" },
   { name: "Reddit", category: "Tools", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/reddit.svg", color: "#000000", iconId: "reddit" },
   { name: "Reddit Wordmark", category: "Tools", badgeUrl: "https://raw.githubusercontent.com/xandemon/developer-icons/main/icons/reddit-wordmark.svg", color: "#000000", iconId: "reddit-wordmark" },

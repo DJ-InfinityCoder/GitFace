@@ -5,9 +5,23 @@ import { useReadmeStore } from "@/store/readme-store";
 import { TECH_BADGES, CATEGORIES, type TechBadge } from "@/lib/tech-badges";
 import { Search, X } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
+import { 
+  DndContext, 
+  closestCenter, 
+  PointerSensor, 
+  useSensor, 
+  useSensors, 
+  DragEndEvent 
+} from "@dnd-kit/core";
+import { 
+  SortableContext, 
+  rectSortingStrategy, 
+  arrayMove 
+} from "@dnd-kit/sortable";
+import { SortableTechItem } from "./sortable-tech-item";
 
 export function TechStackSection() {
-  const { techStack, addTech, removeTech } = useReadmeStore();
+  const { techStack, addTech, removeTech, setTechStack } = useReadmeStore();
   const [searchQuery, setSearchQuery] = useState("");
   const filteredBadges = useMemo(() => {
     let badges: TechBadge[] = TECH_BADGES;
@@ -19,6 +33,21 @@ export function TechStackSection() {
 
     return badges;
   }, [searchQuery]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = techStack.findIndex((t) => t.name === active.id);
+      const newIndex = techStack.findIndex((t) => t.name === over.id);
+      setTechStack(arrayMove(techStack, oldIndex, newIndex));
+    }
+  };
 
   const isSelected = (name: string) =>
     techStack.some((t) => t.name === name);
@@ -37,31 +66,26 @@ export function TechStackSection() {
 
 
 
-          <div className="flex flex-wrap gap-4 pt-1 px-1 min-h-[50px]">
-            {techStack.map((tech) => (
-              <Tooltip key={tech.name} content={tech.name}>
-                <div
-                  className="relative group p-2 rounded bg-gh-muted border border-gh-border transition-all hover:border-gh-green/50"
-                >
-                  <img
-                    src={tech.badge}
-                    alt={tech.name}
-                    className="w-8 h-8 object-contain"
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={techStack.map((t) => t.name)}
+              strategy={rectSortingStrategy}
+            >
+              <div className="flex flex-wrap gap-4 pt-1 px-1 min-h-[50px]">
+                {techStack.map((tech) => (
+                  <SortableTechItem 
+                    key={tech.name} 
+                    tech={tech} 
+                    onRemove={removeTech} 
                   />
-                  <button
-                    onClick={() => removeTech(tech.name)}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gh-danger text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all shadow-lg hover:bg-gh-danger/80"
-                    aria-label={`Remove ${tech.name}`}
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                  <span className="sr-only">{tech.name}</span>
-                </div>
-              </Tooltip>
-            ))}
-            
-
-          </div>
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
 
 
         </div>

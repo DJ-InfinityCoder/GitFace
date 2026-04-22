@@ -109,6 +109,7 @@ export interface ReadmeActions {
   reorderSections: (activeId: string, overId: string) => void;
   addTech: (tech: TechStackItem) => void;
   removeTech: (name: string) => void;
+  setTechStack: (techStack: TechStackItem[]) => void;
   reset: () => void;
   setGitHubData: (data: {
     avatarUrl: string;
@@ -237,6 +238,7 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
         set((state) => ({
           techStack: state.techStack.filter((t) => t.name !== name),
         })),
+      setTechStack: (techStack) => set({ techStack }),
       reset: () => {
         localStorage.removeItem("gitface-readme-config");
         set({
