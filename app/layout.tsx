@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fira_Code } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Providers } from "./providers";
+import { getSiteUrl } from "@/lib/site-config";
 import "./globals.css";
+
+const siteUrl = getSiteUrl();
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -19,7 +22,7 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gitface.dilip.live"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "GitFace — GitHub Profile README Generator",
     template: "%s | GitFace",
@@ -53,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://gitface.dilip.live",
+    url: siteUrl,
     siteName: "GitFace — Professional READMEs",
     title: "GitFace — The Ultimate GitHub Profile README Generator",
     description:

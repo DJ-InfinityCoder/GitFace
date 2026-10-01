@@ -1,4 +1,5 @@
 import type { ReadmeState } from "@/store/readme-store";
+import { getMarkdownBaseUrl } from "./site-config";
 
 export function getSectionMarkdown(state: ReadmeState, sectionId: string): string {
   const sectionGenerators: Record<string, () => string[]> = {
@@ -33,7 +34,7 @@ export function generateMarkdown(state: ReadmeState): string {
 
 function generateProfile(state: ReadmeState): string[] {
   const lines: string[] = [];
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  const baseUrl = getMarkdownBaseUrl();
 
   // No avatar photo — keep it clean
 
@@ -147,7 +148,7 @@ function generateProfile(state: ReadmeState): string[] {
 
 function generateTechStack(state: ReadmeState): string[] {
   if (state.techStack.length === 0) return [];
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  const baseUrl = getMarkdownBaseUrl();
 
   const lines: string[] = [];
   lines.push("");
@@ -190,7 +191,7 @@ function generateGitHubStats(state: ReadmeState): string[] {
   lines.push("");
 
   // Base URL for the API (Relative for preview, absolute for production)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  const baseUrl = getMarkdownBaseUrl();
   const theme = state.previewTheme || "dark";
 
   lines.push('<p align="center">');
@@ -236,7 +237,7 @@ function generateGitHubStats(state: ReadmeState): string[] {
 }
 
 function generateSocials(state: ReadmeState): string[] {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  const baseUrl = getMarkdownBaseUrl();
   const categories: Record<string, string[]> = {
     "Professional Presence": [],
     "Coding & Challenges": [],

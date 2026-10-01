@@ -11,19 +11,19 @@
 
 <p align="center">
   <a href="https://github.com/DJ-InfinityCoder/GitFace/stargazers">
-    <img src="https://gitface.dilip.live/api/gitface-stats?type=stars" alt="GitHub Stars">
+    <img src="https://gitface.dilip.website/api/gitface-stats?type=stars" alt="GitHub Stars">
   </a>
   <a href="https://github.com/DJ-InfinityCoder/GitFace/network/members">
-    <img src="https://gitface.dilip.live/api/gitface-stats?type=forks" alt="GitHub Forks">
+    <img src="https://gitface.dilip.website/api/gitface-stats?type=forks" alt="GitHub Forks">
   </a>
   <a href="https://github.com/DJ-InfinityCoder/GitFace/blob/main/LICENSE">
-    <img src="https://gitface.dilip.live/api/gitface-stats?type=license" alt="Project License">
+    <img src="https://gitface.dilip.website/api/gitface-stats?type=license" alt="Project License">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://gitface.dilip.live" target="_blank">
-    <img src="https://gitface.dilip.live/api/gitface-stats?type=launch" alt="Visit Website">
+  <a href="https://gitface.dilip.website" target="_blank">
+    <img src="https://gitface.dilip.website/api/gitface-stats?type=launch" alt="Visit Website">
   </a>
 </p>
 
