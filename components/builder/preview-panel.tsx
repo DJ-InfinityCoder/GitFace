@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { useReadmeStore } from "@/store/readme-store";
 import { generateMarkdown } from "@/lib/generate-markdown";
+import { sanitizeLegacyDomain } from "@/lib/site-config";
 import confetti from "canvas-confetti";
 import {
   Copy,
@@ -55,7 +56,7 @@ export function PreviewPanel() {
   useEffect(() => {
     const generate = () => {
       const state = useReadmeStore.getState();
-      const newMarkdown = generateMarkdown(state);
+      const newMarkdown = sanitizeLegacyDomain(generateMarkdown(state));
       setMarkdown(newMarkdown);
       // Show "synced" checkmark briefly, then go back to idle
       setSyncStatus("synced");
@@ -98,7 +99,7 @@ export function PreviewPanel() {
     // Small delay so the user sees the spin animation
     setTimeout(() => {
       const state = useReadmeStore.getState();
-      const newMarkdown = generateMarkdown(state);
+      const newMarkdown = sanitizeLegacyDomain(generateMarkdown(state));
       setMarkdown(newMarkdown);
       setSyncStatus("synced");
       if (syncedTimerRef.current) clearTimeout(syncedTimerRef.current);
@@ -107,8 +108,9 @@ export function PreviewPanel() {
   }, []);
 
   const handleCopy = useCallback(async () => {
+    const cleanMarkdown = sanitizeLegacyDomain(markdown);
     try {
-      await navigator.clipboard.writeText(markdown);
+      await navigator.clipboard.writeText(cleanMarkdown);
       setCopied(true);
 
       confetti({
@@ -133,7 +135,8 @@ export function PreviewPanel() {
   }, [markdown]);
 
   const handleDownload = useCallback(() => {
-    const blob = new Blob([markdown], { type: "text/markdown" });
+    const cleanMarkdown = sanitizeLegacyDomain(markdown);
+    const blob = new Blob([cleanMarkdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

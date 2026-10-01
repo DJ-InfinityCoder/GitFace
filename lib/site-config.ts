@@ -1,6 +1,19 @@
 export const DEFAULT_SITE_URL = "https://gitface.dilip.website";
 
 /**
+ * Automatically transforms any legacy domain references (such as *.dilip.live or dilip.live)
+ * in markdown content, badge URLs, or text into the official .website domain.
+ */
+export function sanitizeLegacyDomain(content: string): string {
+  if (!content || typeof content !== "string") return content;
+  return content
+    .replace(/https?:\/\/gitface\.dilip\.live/gi, "https://gitface.dilip.website")
+    .replace(/gitface\.dilip\.live/gi, "gitface.dilip.website")
+    .replace(/https?:\/\/(?:www\.)?dilip\.live/gi, "https://dilip.website")
+    .replace(/dilip\.live/gi, "dilip.website");
+}
+
+/**
  * Returns the canonical base URL for the site.
  * Priority:
  * 1. NEXT_PUBLIC_APP_URL (if configured in environment)
@@ -9,25 +22,27 @@ export const DEFAULT_SITE_URL = "https://gitface.dilip.website";
  * 4. Fallback: https://gitface.dilip.website
  */
 export function getSiteUrl(): string {
+  let url = DEFAULT_SITE_URL;
+
   if (process.env.NEXT_PUBLIC_APP_URL) {
-    const url = process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/$/, "");
-    if (url) return url;
+    const custom = process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/$/, "");
+    if (custom) url = custom;
+  } else {
+    const vercelProduction =
+      process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ||
+      process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    if (vercelProduction) {
+      url = `https://${vercelProduction.replace(/\/$/, "")}`;
+    } else {
+      const vercelUrl =
+        process.env.NEXT_PUBLIC_VERCEL_URL || process.env.VERCEL_URL;
+      if (vercelUrl) {
+        url = `https://${vercelUrl.replace(/\/$/, "")}`;
+      }
+    }
   }
 
-  const vercelProduction =
-    process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ||
-    process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  if (vercelProduction) {
-    return `https://${vercelProduction.replace(/\/$/, "")}`;
-  }
-
-  const vercelUrl =
-    process.env.NEXT_PUBLIC_VERCEL_URL || process.env.VERCEL_URL;
-  if (vercelUrl) {
-    return `https://${vercelUrl.replace(/\/$/, "")}`;
-  }
-
-  return DEFAULT_SITE_URL;
+  return sanitizeLegacyDomain(url);
 }
 
 /**
@@ -38,12 +53,12 @@ export function getSiteUrl(): string {
 export function getMarkdownBaseUrl(): string {
   const customUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
   if (customUrl && !customUrl.includes("localhost") && !customUrl.includes("127.0.0.1")) {
-    return customUrl.replace(/\/$/, "");
+    return sanitizeLegacyDomain(customUrl.replace(/\/$/, ""));
   }
 
   const siteUrl = getSiteUrl();
   if (!siteUrl.includes("localhost") && !siteUrl.includes("127.0.0.1")) {
-    return siteUrl;
+    return sanitizeLegacyDomain(siteUrl);
   }
 
   return DEFAULT_SITE_URL;

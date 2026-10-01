@@ -1,5 +1,5 @@
 import type { ReadmeState } from "@/store/readme-store";
-import { getMarkdownBaseUrl } from "./site-config";
+import { getMarkdownBaseUrl, sanitizeLegacyDomain } from "./site-config";
 
 export function getSectionMarkdown(state: ReadmeState, sectionId: string): string {
   const sectionGenerators: Record<string, () => string[]> = {
@@ -14,7 +14,7 @@ export function getSectionMarkdown(state: ReadmeState, sectionId: string): strin
   if (!generator) return "";
 
   const lines = generator();
-  return lines.length > 0 ? lines.join("\n") : "";
+  return lines.length > 0 ? sanitizeLegacyDomain(lines.join("\n")) : "";
 }
 
 export function generateMarkdown(state: ReadmeState): string {
@@ -29,7 +29,8 @@ export function generateMarkdown(state: ReadmeState): string {
     }
   }
 
-  return lines.join("\n").trim() + "\n";
+  const result = lines.join("\n").trim() + "\n";
+  return sanitizeLegacyDomain(result);
 }
 
 function generateProfile(state: ReadmeState): string[] {

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { sanitizeLegacyDomain } from "@/lib/site-config";
 
 export interface SectionItem {
   id: string;
@@ -214,7 +215,10 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
 
       // Actions
       setField: (key, value) =>
-        set((state) => ({ ...state, [key]: value })),
+        set((state) => ({
+          ...state,
+          [key]: typeof value === "string" ? sanitizeLegacyDomain(value) : value,
+        })),
 
       reorderSections: (activeId, overId) =>
         set((state) => {
@@ -352,6 +356,39 @@ export const useReadmeStore = create<ReadmeState & ReadmeActions>()(
     }),
     {
       name: "gitface-readme-config",
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        const stringKeys = [
+          "customMarkdown",
+          "portfolioUrl",
+          "portfolio",
+          "tagline",
+          "bio",
+          "workingOn",
+          "learning",
+          "collaboratingOn",
+          "anythingElse",
+          "contactEmail",
+        ] as const;
+
+        stringKeys.forEach((key) => {
+          if (state[key] && typeof state[key] === "string") {
+            state[key] = sanitizeLegacyDomain(state[key]);
+          }
+        });
+      },
+      migrate: (persistedState: any) => {
+        if (persistedState && typeof persistedState === "object") {
+          try {
+            const raw = JSON.stringify(persistedState);
+            const cleaned = sanitizeLegacyDomain(raw);
+            return JSON.parse(cleaned);
+          } catch {
+            return persistedState;
+          }
+        }
+        return persistedState;
+      },
     }
   )
 );
